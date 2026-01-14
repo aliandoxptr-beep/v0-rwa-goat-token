@@ -3,6 +3,8 @@ import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { Web3Provider } from "@/contexts/web3-context"
+import { CartProvider } from "@/contexts/cart-context"
+import { GoatsProvider } from "@/contexts/goats-context"
 import "./globals.css"
 
 const _geist = Geist({ subsets: ["latin"] })
@@ -40,7 +42,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans antialiased`}>
-        <Web3Provider>{children}</Web3Provider>
+        <Web3Provider>
+          <GoatsProvider>
+            <CartProvider>{children}</CartProvider>
+          </GoatsProvider>
+        </Web3Provider>
         <Analytics />
       </body>
     </html>

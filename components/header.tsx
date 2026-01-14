@@ -1,9 +1,11 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { WalletConnectModal } from "@/components/wallet-connect-modal"
+import { CartDrawer } from "@/components/cart-drawer"
 import { ChevronDown, LogOut, Copy, RefreshCw, ExternalLink, AlertTriangle, Menu, X } from "lucide-react"
 import {
   DropdownMenu,
@@ -36,11 +38,8 @@ export function Header() {
     <>
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-              <span className="text-lg font-bold text-primary-foreground">G</span>
-            </div>
-            <span className="text-xl font-semibold tracking-tight">Garosta</span>
+          <Link href="/" className="flex items-center gap-2">
+            <Image src="/garosta-logo.png" alt="Garosta" width={140} height={40} className="h-10 w-auto" priority />
           </Link>
 
           <nav className="hidden items-center gap-8 md:flex">
@@ -66,7 +65,7 @@ export function Header() {
 
           <div className="flex items-center gap-2 sm:gap-3">
             <NetworkSwitcher />
-
+            <CartDrawer />
             {isConnected ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

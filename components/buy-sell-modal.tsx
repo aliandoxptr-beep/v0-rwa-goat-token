@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useWeb3 } from "@/contexts/web3-context"
+import { useCart } from "@/contexts/cart-context"
 import { Loader2, ShoppingCart, Tag, AlertCircle, ExternalLink, CheckCircle2 } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import Image from "next/image"
@@ -25,6 +26,7 @@ const TREASURY_ADDRESS = "0x48e390cf960497142e6724637e5edd288ea911f2"
 export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuySellModalProps) {
   const { isConnected, address, balance, isCorrectNetwork, switchToMantle, networkType, getConnectedProvider } =
     useWeb3()
+  const { addItem } = useCart()
   const [isLoading, setIsLoading] = useState(false)
   const [txHash, setTxHash] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -82,7 +84,6 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
         value: valueHex,
       }
 
-      // Send transaction
       const hash = await provider.request({
         method: "eth_sendTransaction",
         params: [txParams],
@@ -90,6 +91,7 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
 
       setTxHash(hash)
       setIsSuccess(true)
+      addItem(goat, hash, goatPriceInMNT)
 
       setTimeout(() => {
         setIsLoading(false)
@@ -137,7 +139,6 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
     setIsLoading(true)
 
     try {
-      // Simulate listing (in production this would call smart contract)
       await new Promise((resolve) => setTimeout(resolve, 1500))
 
       setIsSuccess(true)
@@ -162,7 +163,6 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
         </DialogHeader>
 
         <div className="space-y-4">
-          {/* Goat Info Card */}
           <div className="flex gap-4 rounded-xl border border-border p-4">
             <div className="relative h-20 w-20 overflow-hidden rounded-lg">
               <Image src={goat.image || "/placeholder.svg"} alt={goat.name} fill className="object-cover" />
@@ -242,7 +242,7 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
                 <Alert className="border-green-500 bg-green-500/10">
                   <CheckCircle2 className="h-4 w-4 text-green-500" />
                   <AlertDescription className="flex items-center justify-between">
-                    <span className="text-green-700">Transaction successful!</span>
+                    <span className="text-green-700">Transaction successful! Added to My NFTs</span>
                     <a
                       href={getExplorerUrl(txHash)}
                       target="_blank"
