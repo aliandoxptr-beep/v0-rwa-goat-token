@@ -28,19 +28,18 @@ export default async function GoatDetailPage({ params }: GoatDetailPageProps) {
   const weightGain = currentWeight - initialWeight
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="container px-4 py-8 md:px-6 md:py-12">
-        {/* Back Button */}
-        <Button asChild variant="ghost" className="mb-6 gap-2">
+      <main className="flex-1 mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+        <Button asChild variant="ghost" className="mb-6 -ml-2 gap-2">
           <Link href="/dashboard">
             <ArrowLeft className="h-4 w-4" />
             Back to Dashboard
           </Link>
         </Button>
 
-        <div className="grid gap-8 lg:grid-cols-3">
-          {/* Left Column - Image and Basic Info */}
+        <div className="grid gap-6 lg:grid-cols-3 lg:gap-8">
+          {/* Left Column */}
           <div className="lg:col-span-1">
             <Card>
               <div className="relative aspect-square overflow-hidden rounded-t-lg">
@@ -49,45 +48,44 @@ export default async function GoatDetailPage({ params }: GoatDetailPageProps) {
                   <Badge variant={goat.health === "Healthy" ? "default" : "secondary"}>{goat.health}</Badge>
                 </div>
               </div>
-              <CardContent className="p-6">
-                <div className="mb-4 flex items-center justify-between">
+              <CardContent className="p-5 sm:p-6">
+                <div className="mb-5 flex items-start justify-between gap-4">
                   <div>
-                    <h1 className="text-2xl font-bold">{goat.name}</h1>
+                    <h1 className="text-xl sm:text-2xl font-bold">{goat.name}</h1>
                     <p className="text-muted-foreground">{goat.nftId}</p>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right shrink-0">
                     <p className="text-sm text-muted-foreground">Value</p>
                     <p className="text-xl font-bold text-primary">${goat.value.toFixed(2)}</p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="rounded-lg bg-secondary p-3 text-center">
+                  <div className="rounded-xl bg-secondary p-3 text-center">
                     <p className="text-xs text-muted-foreground">Age</p>
-                    <p className="font-semibold">{goat.age} months</p>
+                    <p className="font-semibold mt-0.5">{goat.age} months</p>
                   </div>
-                  <div className="rounded-lg bg-secondary p-3 text-center">
+                  <div className="rounded-xl bg-secondary p-3 text-center">
                     <p className="text-xs text-muted-foreground">RFID</p>
-                    <p className="font-mono text-xs font-semibold">{goat.rfid}</p>
+                    <p className="font-mono text-xs font-semibold mt-0.5">{goat.rfid}</p>
                   </div>
-                  <div className="rounded-lg bg-secondary p-3 text-center">
+                  <div className="rounded-xl bg-secondary p-3 text-center">
                     <p className="text-xs text-muted-foreground">Current Weight</p>
-                    <p className="font-semibold">{currentWeight} kg</p>
+                    <p className="font-semibold mt-0.5">{currentWeight} kg</p>
                   </div>
-                  <div className="rounded-lg bg-secondary p-3 text-center">
+                  <div className="rounded-xl bg-secondary p-3 text-center">
                     <p className="text-xs text-muted-foreground">Weight Gain</p>
-                    <p className="font-semibold text-primary">+{weightGain} kg</p>
+                    <p className="font-semibold text-primary mt-0.5">+{weightGain} kg</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* Right Column - Charts and Data */}
+          {/* Right Column */}
           <div className="space-y-6 lg:col-span-2">
-            {/* Weight Growth Chart */}
             <Card>
-              <CardHeader>
+              <CardHeader className="pb-4">
                 <CardTitle>Weight Growth Over Time</CardTitle>
               </CardHeader>
               <CardContent>
@@ -95,58 +93,58 @@ export default async function GoatDetailPage({ params }: GoatDetailPageProps) {
               </CardContent>
             </Card>
 
-            {/* Asset Data Table */}
             <Card>
-              <CardHeader>
+              <CardHeader className="pb-4">
                 <CardTitle>Real-Time Asset Data</CardTitle>
               </CardHeader>
               <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Metric</TableHead>
-                      <TableHead className="text-right">Value</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    <TableRow>
-                      <TableCell>Initial Weight</TableCell>
-                      <TableCell className="text-right font-medium">{initialWeight} kg</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>Current Weight</TableCell>
-                      <TableCell className="text-right font-medium">{currentWeight} kg</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>Feed Cost (Monthly)</TableCell>
-                      <TableCell className="text-right font-medium">${goat.feedCost.toFixed(2)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>Medicine Cost</TableCell>
-                      <TableCell className="text-right font-medium">${goat.medicineCost.toFixed(2)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>Total Cost</TableCell>
-                      <TableCell className="text-right font-medium">${goat.cost.toFixed(2)}</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
+                <div className="overflow-x-auto -mx-2 px-2">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Metric</TableHead>
+                        <TableHead className="text-right">Value</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>Initial Weight</TableCell>
+                        <TableCell className="text-right font-medium">{initialWeight} kg</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>Current Weight</TableCell>
+                        <TableCell className="text-right font-medium">{currentWeight} kg</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>Feed Cost (Monthly)</TableCell>
+                        <TableCell className="text-right font-medium">${goat.feedCost.toFixed(2)}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>Medicine Cost</TableCell>
+                        <TableCell className="text-right font-medium">${goat.medicineCost.toFixed(2)}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>Total Cost</TableCell>
+                        <TableCell className="text-right font-medium">${goat.cost.toFixed(2)}</TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </div>
               </CardContent>
             </Card>
 
-            {/* Health Logs */}
             <Card>
-              <CardHeader>
+              <CardHeader className="pb-4">
                 <CardTitle>Health Logs</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
                   {goat.healthLogs.map((log, i) => (
-                    <div key={i} className="flex items-start gap-3 rounded-lg border border-border p-3">
-                      <div className="h-2 w-2 mt-2 rounded-full bg-primary" />
+                    <div key={i} className="flex items-start gap-3 rounded-xl border border-border p-4">
+                      <div className="h-2 w-2 mt-2 rounded-full bg-primary shrink-0" />
                       <div>
                         <p className="text-sm font-medium">{log.note}</p>
-                        <p className="text-xs text-muted-foreground">{log.date}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">{log.date}</p>
                       </div>
                     </div>
                   ))}
@@ -154,46 +152,45 @@ export default async function GoatDetailPage({ params }: GoatDetailPageProps) {
               </CardContent>
             </Card>
 
-            {/* Blockchain Data */}
             <Card>
-              <CardHeader>
+              <CardHeader className="pb-4">
                 <CardTitle className="flex items-center gap-2">
                   Blockchain Data
                   <ExternalLink className="h-4 w-4 text-muted-foreground" />
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between rounded-lg bg-secondary p-3">
-                    <div>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between gap-3 rounded-xl bg-secondary p-4">
+                    <div className="min-w-0">
                       <p className="text-xs text-muted-foreground">NFT Contract Address</p>
-                      <p className="font-mono text-sm">{goat.contractAddress}</p>
+                      <p className="font-mono text-sm truncate mt-0.5">{goat.contractAddress}</p>
                     </div>
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="icon" className="shrink-0">
                       <Copy className="h-4 w-4" />
                     </Button>
                   </div>
-                  <div className="flex items-center justify-between rounded-lg bg-secondary p-3">
-                    <div>
+                  <div className="flex items-center justify-between gap-3 rounded-xl bg-secondary p-4">
+                    <div className="min-w-0">
                       <p className="text-xs text-muted-foreground">Token ID</p>
-                      <p className="font-mono text-sm">#{goat.tokenId}</p>
+                      <p className="font-mono text-sm mt-0.5">#{goat.tokenId}</p>
                     </div>
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="icon" className="shrink-0">
                       <Copy className="h-4 w-4" />
                     </Button>
                   </div>
-                  <div className="flex items-center justify-between rounded-lg bg-secondary p-3">
-                    <div>
+                  <div className="flex items-center justify-between gap-3 rounded-xl bg-secondary p-4">
+                    <div className="min-w-0">
                       <p className="text-xs text-muted-foreground">Owner Address</p>
-                      <p className="font-mono text-sm">{goat.owner}</p>
+                      <p className="font-mono text-sm truncate mt-0.5">{goat.owner}</p>
                     </div>
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="icon" className="shrink-0">
                       <Copy className="h-4 w-4" />
                     </Button>
                   </div>
-                  <div className="rounded-lg bg-secondary p-3">
+                  <div className="rounded-xl bg-secondary p-4">
                     <p className="text-xs text-muted-foreground">Mint Date</p>
-                    <p className="font-medium">{goat.mintDate}</p>
+                    <p className="font-medium mt-0.5">{goat.mintDate}</p>
                   </div>
                 </div>
               </CardContent>

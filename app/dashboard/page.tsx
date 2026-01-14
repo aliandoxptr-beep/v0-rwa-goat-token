@@ -30,32 +30,30 @@ export default function DashboardPage() {
   const avgWeight =
     goatsData.reduce((sum, g) => sum + (g.weightHistory[g.weightHistory.length - 1]?.weight || 0), 0) / totalGoats
 
-  // Convert to MNT
   const mntConversionRate = 6400000
   const totalValueMNT = totalValue / mntConversionRate
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="container px-4 py-8 md:px-6 md:py-12">
-        {/* Page Header */}
-        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <main className="flex-1 mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <div className="mb-2 flex items-center gap-2">
+            <div className="mb-3 flex flex-wrap items-center gap-2">
               <Badge variant="outline" className="text-xs">
                 Live Data
               </Badge>
               <span className="text-xs text-muted-foreground">Last updated: Jan 14, 2026</span>
             </div>
-            <h1 className="mb-2 text-3xl font-bold md:text-4xl">Live RWA Dashboard</h1>
-            <p className="text-muted-foreground">
+            <h1 className="mb-2 text-2xl font-bold sm:text-3xl lg:text-4xl">Live RWA Dashboard</h1>
+            <p className="text-muted-foreground max-w-xl">
               Track all tokenized goat assets in real-time. Each card represents one NFT backed by a physical goat.
             </p>
           </div>
 
           <Button
             onClick={() => setShowAddModal(true)}
-            className="shrink-0"
+            className="shrink-0 w-full sm:w-auto"
             disabled={!isConnected || !isCorrectNetwork}
           >
             <Plus className="mr-2 h-4 w-4" />
@@ -63,31 +61,29 @@ export default function DashboardPage() {
           </Button>
         </div>
 
-        {/* Stats Overview */}
-        <div className="mb-10 grid grid-cols-2 gap-4 md:grid-cols-4">
-          <div className="rounded-xl border border-border bg-card p-4">
-            <p className="text-sm text-muted-foreground">Total Goats</p>
-            <p className="text-2xl font-bold">{totalGoats}</p>
+        <div className="mb-10 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+          <div className="rounded-2xl border border-border bg-card p-4 sm:p-5">
+            <p className="text-xs sm:text-sm text-muted-foreground">Total Goats</p>
+            <p className="text-xl sm:text-2xl font-bold mt-1">{totalGoats}</p>
           </div>
-          <div className="rounded-xl border border-border bg-card p-4">
-            <p className="text-sm text-muted-foreground">Healthy</p>
-            <p className="text-2xl font-bold text-primary">
+          <div className="rounded-2xl border border-border bg-card p-4 sm:p-5">
+            <p className="text-xs sm:text-sm text-muted-foreground">Healthy</p>
+            <p className="text-xl sm:text-2xl font-bold text-primary mt-1">
               {healthyGoats}/{totalGoats}
             </p>
           </div>
-          <div className="rounded-xl border border-border bg-card p-4">
-            <p className="text-sm text-muted-foreground">Total Value (MNT)</p>
-            <p className="text-2xl font-bold">{totalValueMNT.toFixed(2)} MNT</p>
+          <div className="rounded-2xl border border-border bg-card p-4 sm:p-5">
+            <p className="text-xs sm:text-sm text-muted-foreground">Total Value (MNT)</p>
+            <p className="text-xl sm:text-2xl font-bold mt-1">{totalValueMNT.toFixed(2)} MNT</p>
           </div>
-          <div className="rounded-xl border border-border bg-card p-4">
-            <p className="text-sm text-muted-foreground">Avg Weight</p>
-            <p className="text-2xl font-bold">{avgWeight.toFixed(1)}kg</p>
+          <div className="rounded-2xl border border-border bg-card p-4 sm:p-5">
+            <p className="text-xs sm:text-sm text-muted-foreground">Avg Weight</p>
+            <p className="text-xl sm:text-2xl font-bold mt-1">{avgWeight.toFixed(1)}kg</p>
           </div>
         </div>
 
-        {/* Filter and Count */}
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Goat NFT Collection</h2>
+        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <h2 className="text-lg font-semibold sm:text-xl">Goat NFT Collection</h2>
           <div className="flex items-center gap-3">
             <p className="text-sm text-muted-foreground">{filteredGoats.length} assets</p>
             <Select value={filter} onValueChange={setFilter}>
@@ -104,29 +100,21 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Goat NFT Grid */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filteredGoats.map((goat) => (
             <GoatCard key={goat.nftId} goat={goat} />
           ))}
         </div>
 
         {filteredGoats.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
+          <div className="flex flex-col items-center justify-center py-16 text-center">
             <p className="text-muted-foreground">No goats found</p>
           </div>
         )}
       </main>
       <Footer />
 
-      {/* Add Goat Modal */}
-      <AddGoatModal
-        open={showAddModal}
-        onOpenChange={setShowAddModal}
-        onSuccess={() => {
-          // In real app, would refresh data from blockchain
-        }}
-      />
+      <AddGoatModal open={showAddModal} onOpenChange={setShowAddModal} onSuccess={() => {}} />
     </div>
   )
 }

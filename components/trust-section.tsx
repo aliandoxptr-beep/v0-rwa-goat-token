@@ -25,27 +25,27 @@ export function TrustSection() {
   ]
 
   return (
-    <section className="border-b border-border py-20 md:py-28">
-      <div className="container px-4 md:px-6">
+    <section className="border-b border-border py-16 sm:py-24 lg:py-28">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
-          <h2 className="mb-4 text-3xl font-bold md:text-4xl">Built on Trust & Impact</h2>
-          <p className="mb-12 text-muted-foreground md:text-lg">
+          <h2 className="mb-4 text-2xl font-bold sm:text-3xl lg:text-4xl">Built on Trust & Impact</h2>
+          <p className="mb-12 text-muted-foreground sm:text-lg leading-relaxed">
             Our project combines traditional livestock farming with modern blockchain technology to create transparent,
             community-driven investments.
           </p>
         </div>
 
-        <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mx-auto grid max-w-5xl gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {features.map((feature, i) => (
             <div
               key={i}
-              className="group rounded-xl border border-border bg-card p-6 transition-colors hover:border-primary/50"
+              className="group rounded-2xl border border-border bg-card p-6 transition-all hover:border-primary/50 hover:shadow-lg"
             >
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
                 <feature.icon className="h-6 w-6" />
               </div>
               <h3 className="mb-2 font-semibold">{feature.title}</h3>
-              <p className="text-sm text-muted-foreground">{feature.description}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
             </div>
           ))}
         </div>

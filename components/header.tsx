@@ -4,7 +4,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { WalletConnectModal } from "@/components/wallet-connect-modal"
-import { ChevronDown, LogOut, Copy, RefreshCw, ExternalLink, AlertTriangle } from "lucide-react"
+import { ChevronDown, LogOut, Copy, RefreshCw, ExternalLink, AlertTriangle, Menu, X } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,6 +20,7 @@ export function Header() {
     useWeb3()
   const [showWalletModal, setShowWalletModal] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const currentNetwork = getCurrentNetwork()
 
@@ -34,15 +35,15 @@ export function Header() {
   return (
     <>
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between px-4 md:px-6">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
               <span className="text-lg font-bold text-primary-foreground">G</span>
             </div>
-            <span className="text-lg font-semibold">Garosta</span>
+            <span className="text-xl font-semibold tracking-tight">Garosta</span>
           </Link>
 
-          <nav className="hidden items-center gap-6 md:flex">
+          <nav className="hidden items-center gap-8 md:flex">
             <Link
               href="/"
               className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
@@ -63,29 +64,30 @@ export function Header() {
             </Link>
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <NetworkSwitcher />
 
             {isConnected ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="flex items-center gap-2 bg-transparent">
+                  <Button variant="outline" size="sm" className="flex items-center gap-2 bg-transparent">
                     {!isCorrectNetwork && <AlertTriangle className="h-4 w-4 text-yellow-500" />}
                     <div className={`h-2 w-2 rounded-full ${isCorrectNetwork ? "bg-green-500" : "bg-yellow-500"}`} />
-                    <span className="text-sm font-medium">
+                    <span className="hidden text-sm font-medium sm:inline">
                       {address?.slice(0, 6)}...{address?.slice(-4)}
                     </span>
+                    <span className="text-sm font-medium sm:hidden">{address?.slice(0, 4)}...</span>
                     <ChevronDown className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-64">
-                  <div className="px-3 py-2">
+                  <div className="px-3 py-2.5">
                     <p className="text-xs text-muted-foreground">Connected with {walletName}</p>
-                    <p className="font-mono text-sm mt-1">
+                    <p className="font-mono text-sm mt-1.5">
                       {address?.slice(0, 10)}...{address?.slice(-8)}
                     </p>
                     {balance && (
-                      <p className="text-sm font-medium mt-2">
+                      <p className="text-sm font-semibold mt-2">
                         {balance} {currentNetwork.nativeCurrency.symbol}
                       </p>
                     )}
@@ -141,8 +143,45 @@ export function Header() {
                 Connect Wallet
               </Button>
             )}
+
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </Button>
           </div>
         </div>
+
+        {mobileMenuOpen && (
+          <div className="border-t border-border md:hidden">
+            <nav className="flex flex-col gap-1 px-4 py-3">
+              <Link
+                href="/"
+                onClick={() => setMobileMenuOpen(false)}
+                className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              >
+                Home
+              </Link>
+              <Link
+                href="/dashboard"
+                onClick={() => setMobileMenuOpen(false)}
+                className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              >
+                Dashboard
+              </Link>
+              <Link
+                href="/financials"
+                onClick={() => setMobileMenuOpen(false)}
+                className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              >
+                Financials
+              </Link>
+            </nav>
+          </div>
+        )}
       </header>
 
       <WalletConnectModal open={showWalletModal} onOpenChange={setShowWalletModal} />

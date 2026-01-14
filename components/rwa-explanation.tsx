@@ -25,37 +25,35 @@ export function RWAExplanation() {
   ]
 
   return (
-    <section id="how-it-works" className="border-b border-border bg-secondary/30 py-20 md:py-28">
-      <div className="container px-4 md:px-6">
+    <section id="how-it-works" className="border-b border-border bg-secondary/30 py-16 sm:py-24 lg:py-28">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
-          <h2 className="mb-4 text-3xl font-bold md:text-4xl">How RWA Tokenization Works</h2>
-          <p className="mb-12 text-muted-foreground md:text-lg">
+          <h2 className="mb-4 text-2xl font-bold sm:text-3xl lg:text-4xl">How RWA Tokenization Works</h2>
+          <p className="mb-12 text-muted-foreground sm:text-lg leading-relaxed">
             Each goat equals one NFT. The NFT is backed by real livestock, with data updated directly from the field.
           </p>
         </div>
 
-        {/* Flow diagram */}
         <div className="mx-auto max-w-5xl">
-          <div className="grid gap-4 md:grid-cols-4">
+          <div className="grid gap-6 sm:gap-4 md:grid-cols-4">
             {steps.map((step, index) => (
               <div key={index} className="relative">
                 <div className="flex flex-col items-center text-center">
-                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
+                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg">
                     <step.icon className="h-7 w-7" />
                   </div>
                   <h3 className="mb-2 font-semibold">{step.title}</h3>
-                  <p className="text-sm text-muted-foreground">{step.description}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
                 </div>
                 {index < steps.length - 1 && (
-                  <div className="absolute right-0 top-8 hidden h-0.5 w-full translate-x-1/2 bg-border md:block" />
+                  <div className="absolute right-0 top-8 hidden h-0.5 w-full translate-x-1/2 bg-gradient-to-r from-border to-transparent md:block" />
                 )}
               </div>
             ))}
           </div>
         </div>
 
-        {/* Key points */}
-        <div className="mx-auto mt-16 grid max-w-4xl gap-6 md:grid-cols-3">
+        <div className="mx-auto mt-16 grid max-w-4xl gap-4 sm:grid-cols-3">
           {[
             {
               title: "1 Goat = 1 NFT",
@@ -70,9 +68,12 @@ export function RWAExplanation() {
               description: "Weight and health data updated weekly from the farm",
             },
           ].map((point, i) => (
-            <div key={i} className="rounded-xl border border-border bg-card p-6">
+            <div
+              key={i}
+              className="rounded-2xl border border-border bg-card p-6 transition-colors hover:border-primary/30"
+            >
               <h4 className="mb-2 font-semibold">{point.title}</h4>
-              <p className="text-sm text-muted-foreground">{point.description}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">{point.description}</p>
             </div>
           ))}
         </div>

@@ -3,36 +3,36 @@ import Link from "next/link"
 export function Footer() {
   return (
     <footer className="border-t border-border bg-secondary/30">
-      <div className="container px-4 py-12 md:px-6">
-        <div className="grid gap-8 md:grid-cols-4">
-          <div className="md:col-span-2">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="sm:col-span-2">
+            <Link href="/" className="inline-flex items-center gap-2.5">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
                 <span className="text-lg font-bold text-primary-foreground">G</span>
               </div>
-              <span className="text-lg font-semibold">Garosta</span>
+              <span className="text-xl font-semibold tracking-tight">Garosta</span>
             </Link>
-            <p className="mt-4 max-w-sm text-sm text-muted-foreground">
+            <p className="mt-4 max-w-sm text-sm text-muted-foreground leading-relaxed">
               Tokenizing village-owned goats into transparent, yield-generating NFTs. A Web3 initiative for rural
               financial inclusion powered by Mantle L2.
             </p>
           </div>
 
           <div>
-            <h4 className="mb-4 font-semibold">Quick Links</h4>
-            <ul className="space-y-2 text-sm">
+            <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider">Quick Links</h4>
+            <ul className="space-y-3 text-sm">
               <li>
-                <Link href="/" className="text-muted-foreground hover:text-foreground">
+                <Link href="/" className="text-muted-foreground transition-colors hover:text-foreground">
                   Home
                 </Link>
               </li>
               <li>
-                <Link href="/dashboard" className="text-muted-foreground hover:text-foreground">
+                <Link href="/dashboard" className="text-muted-foreground transition-colors hover:text-foreground">
                   Dashboard
                 </Link>
               </li>
               <li>
-                <Link href="/financials" className="text-muted-foreground hover:text-foreground">
+                <Link href="/financials" className="text-muted-foreground transition-colors hover:text-foreground">
                   Financials
                 </Link>
               </li>
@@ -40,10 +40,10 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="mb-4 font-semibold">Resources</h4>
-            <ul className="space-y-2 text-sm">
+            <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider">Resources</h4>
+            <ul className="space-y-3 text-sm">
               <li>
-                <Link href="/whitepaper" className="text-muted-foreground hover:text-foreground">
+                <Link href="/whitepaper" className="text-muted-foreground transition-colors hover:text-foreground">
                   Whitepaper
                 </Link>
               </li>
@@ -52,7 +52,7 @@ export function Footer() {
                   href="https://explorer.mantle.xyz"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-foreground"
+                  className="text-muted-foreground transition-colors hover:text-foreground"
                 >
                   Smart Contract
                 </a>
@@ -64,8 +64,10 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-border pt-8 text-center text-sm text-muted-foreground">
-          <p>© 2025 Garosta. A Village Enterprise Initiative. Built for Web3 Hackathon on Mantle L2.</p>
+        <div className="mt-12 border-t border-border pt-8">
+          <p className="text-center text-sm text-muted-foreground">
+            © 2025 Garosta. A Village Enterprise Initiative. Built for Web3 Hackathon on Mantle L2.
+          </p>
         </div>
       </div>
     </footer>
