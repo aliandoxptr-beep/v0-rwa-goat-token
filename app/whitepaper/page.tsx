@@ -22,9 +22,7 @@ export default function WhitepaperPage() {
                 </Badge>
                 <Badge variant="secondary">January 2026</Badge>
               </div>
-              <h1 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl mb-6">
-                Garosta Protocol Whitepaper
-              </h1>
+              <h1 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl mb-6">Garosta Whitepaper</h1>
               <p className="text-xl text-muted-foreground mb-8 max-w-3xl">
                 A comprehensive technical and economic overview of tokenizing real-world livestock assets on Mantle
                 Layer 2, enabling transparent, yield-generating investments in village enterprise initiatives.
