@@ -9,9 +9,9 @@ const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "RWA Goat Token | Real World Asset Tokenization",
+  title: "Garosta | Real World Asset Tokenization",
   description:
-    "Tokenizing village-owned goats into transparent, yield-generating NFTs. A BUMDes initiative for rural Web3 inclusion.",
+    "Tokenizing village-owned goats into transparent, yield-generating NFTs. A village enterprise initiative for rural Web3 inclusion.",
   generator: "v0.app",
   icons: {
     icon: [

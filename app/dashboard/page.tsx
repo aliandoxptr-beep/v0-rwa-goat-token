@@ -59,7 +59,7 @@ export default function DashboardPage() {
             disabled={!isConnected || !isCorrectNetwork}
           >
             <Plus className="mr-2 h-4 w-4" />
-            Tambah Kambing
+            Add Goat
           </Button>
         </div>
 
@@ -113,7 +113,7 @@ export default function DashboardPage() {
 
         {filteredGoats.length === 0 && (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <p className="text-muted-foreground">Tidak ada kambing yang ditemukan</p>
+            <p className="text-muted-foreground">No goats found</p>
           </div>
         )}
       </main>

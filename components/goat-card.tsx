@@ -23,8 +23,7 @@ export function GoatCard({ goat }: GoatCardProps) {
   const weightChange = currentWeight - previousWeight
   const isPositive = weightChange >= 0
 
-  // Convert to MNT
-  const mntConversionRate = 6400000
+  const mntConversionRate = 0.4
   const priceInMNT = goat.value / mntConversionRate
 
   const handleBuy = () => {
@@ -56,7 +55,7 @@ export function GoatCard({ goat }: GoatCardProps) {
             </Badge>
           </div>
           <div className="absolute left-2 top-2">
-            <Badge className="bg-primary text-primary-foreground">{priceInMNT.toFixed(3)} MNT</Badge>
+            <Badge className="bg-primary text-primary-foreground">{priceInMNT.toFixed(1)} MNT</Badge>
           </div>
         </div>
 
@@ -100,18 +99,18 @@ export function GoatCard({ goat }: GoatCardProps) {
             </div>
             <div className="text-right">
               <p className="text-xs text-muted-foreground">Value</p>
-              <p className="font-semibold text-primary">Rp {(goat.value / 1000000).toFixed(1)}M</p>
+              <p className="font-semibold text-primary">${goat.value.toFixed(2)}</p>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-2 mb-3">
             <Button variant="default" size="sm" className="w-full" onClick={handleBuy}>
               <ShoppingCart className="mr-1 h-3 w-3" />
-              Beli
+              Buy
             </Button>
             <Button variant="outline" size="sm" className="w-full bg-transparent" onClick={handleSell}>
               <Tag className="mr-1 h-3 w-3" />
-              Jual
+              Sell
             </Button>
           </div>
 

@@ -10,11 +10,11 @@ export function Footer() {
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
                 <span className="text-lg font-bold text-primary-foreground">G</span>
               </div>
-              <span className="text-lg font-semibold">RWA Goat</span>
+              <span className="text-lg font-semibold">Garosta</span>
             </Link>
             <p className="mt-4 max-w-sm text-sm text-muted-foreground">
               Tokenizing village-owned goats into transparent, yield-generating NFTs. A Web3 initiative for rural
-              financial inclusion.
+              financial inclusion powered by Mantle L2.
             </p>
           </div>
 
@@ -43,10 +43,19 @@ export function Footer() {
             <h4 className="mb-4 font-semibold">Resources</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <span className="text-muted-foreground">Whitepaper (Coming Soon)</span>
+                <Link href="/whitepaper" className="text-muted-foreground hover:text-foreground">
+                  Whitepaper
+                </Link>
               </li>
               <li>
-                <span className="text-muted-foreground">Smart Contract</span>
+                <a
+                  href="https://explorer.mantle.xyz"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  Smart Contract
+                </a>
               </li>
               <li>
                 <span className="text-muted-foreground">FAQ</span>
@@ -56,7 +65,7 @@ export function Footer() {
         </div>
 
         <div className="mt-12 border-t border-border pt-8 text-center text-sm text-muted-foreground">
-          <p>© 2025 RWA Goat Token. A BUMDes Initiative. Built for Web3 Hackathon.</p>
+          <p>© 2025 Garosta. A Village Enterprise Initiative. Built for Web3 Hackathon on Mantle L2.</p>
         </div>
       </div>
     </footer>

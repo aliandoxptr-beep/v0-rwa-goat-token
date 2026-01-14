@@ -5,7 +5,7 @@ export function RWAExplanation() {
     {
       icon: Database,
       title: "Physical Goat",
-      description: "Real goats owned by village BUMDes with proper documentation",
+      description: "Real goats owned by village enterprise with proper documentation",
     },
     {
       icon: Cpu,
@@ -15,7 +15,7 @@ export function RWAExplanation() {
     {
       icon: LinkIcon,
       title: "Blockchain (NFT)",
-      description: "Data is recorded on-chain as an ERC-721 NFT",
+      description: "Data is recorded on-chain as an ERC-721 NFT on Mantle L2",
     },
     {
       icon: BarChart3,

@@ -36,7 +36,7 @@ export function ExpenseChart({ expenses }: ExpenseChartProps) {
               border: "1px solid hsl(var(--border))",
               borderRadius: "8px",
             }}
-            formatter={(value: number) => [`Rp ${value.toLocaleString("id-ID")}`, ""]}
+            formatter={(value: number) => [`$${value.toFixed(2)}`, ""]}
           />
           <Legend />
         </PieChart>

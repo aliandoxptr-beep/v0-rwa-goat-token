@@ -30,8 +30,7 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
 
   if (!goat) return null
 
-  // Convert goat value from Rupiah to MNT (mock conversion: 1 MNT = ~Rp 6,400,000)
-  const mntConversionRate = 6400000
+  const mntConversionRate = 0.4
   const goatPriceInMNT = goat.value / mntConversionRate
   const currentWeight = goat.weightHistory[goat.weightHistory.length - 1]?.weight || 0
 
@@ -40,7 +39,7 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
     setTxHash(null)
 
     if (!isConnected) {
-      setError("Silakan hubungkan wallet terlebih dahulu")
+      setError("Please connect your wallet first")
       return
     }
 
@@ -48,14 +47,14 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
       try {
         await switchToMantle()
       } catch {
-        setError("Gagal switch ke Mantle network")
+        setError("Failed to switch to Mantle network")
         return
       }
     }
 
     const requiredBalance = goatPriceInMNT
     if (Number(balance) < requiredBalance) {
-      setError(`Saldo tidak cukup. Diperlukan ${requiredBalance.toFixed(4)} MNT`)
+      setError(`Insufficient balance. Required ${requiredBalance.toFixed(4)} MNT`)
       return
     }
 
@@ -65,7 +64,7 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
       const provider = (window as any).ethereum
 
       if (!provider) {
-        throw new Error("Wallet provider tidak ditemukan")
+        throw new Error("Wallet provider not found")
       }
 
       // Prepare buy transaction
@@ -97,7 +96,7 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
       }, 3000)
     } catch (err: any) {
       console.error("[v0] Buy error:", err)
-      setError(err.message || "Gagal membeli NFT")
+      setError(err.message || "Failed to buy NFT")
       setIsLoading(false)
     }
   }
@@ -107,12 +106,12 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
     setTxHash(null)
 
     if (!isConnected) {
-      setError("Silakan hubungkan wallet terlebih dahulu")
+      setError("Please connect your wallet first")
       return
     }
 
     if (!sellPrice || Number(sellPrice) <= 0) {
-      setError("Masukkan harga jual yang valid")
+      setError("Please enter a valid selling price")
       return
     }
 
@@ -120,7 +119,7 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
       try {
         await switchToMantle()
       } catch {
-        setError("Gagal switch ke Mantle network")
+        setError("Failed to switch to Mantle network")
         return
       }
     }
@@ -131,7 +130,7 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
       const provider = (window as any).ethereum
 
       if (!provider) {
-        throw new Error("Wallet provider tidak ditemukan")
+        throw new Error("Wallet provider not found")
       }
 
       // Prepare list transaction
@@ -163,7 +162,7 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
       }, 3000)
     } catch (err: any) {
       console.error("[v0] Sell error:", err)
-      setError(err.message || "Gagal listing NFT")
+      setError(err.message || "Failed to list NFT")
       setIsLoading(false)
     }
   }
@@ -181,7 +180,7 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>{mode === "buy" ? "Beli NFT Kambing" : "Jual NFT Kambing"}</DialogTitle>
+          <DialogTitle>{mode === "buy" ? "Buy Goat NFT" : "Sell Goat NFT"}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
@@ -194,17 +193,19 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
               <h3 className="font-semibold">{goat.name}</h3>
               <p className="text-sm text-muted-foreground">{goat.nftId}</p>
               <div className="mt-1 flex gap-3 text-sm">
-                <span>Umur: {goat.age}mo</span>
-                <span>Berat: {currentWeight}kg</span>
+                <span>Age: {goat.age}mo</span>
+                <span>Weight: {currentWeight}kg</span>
               </div>
-              <p className="mt-1 text-sm font-medium text-primary">{goatPriceInMNT.toFixed(4)} MNT</p>
+              <p className="mt-1 text-sm font-medium text-primary">
+                {goatPriceInMNT.toFixed(2)} MNT (~${goat.value.toFixed(2)})
+              </p>
             </div>
           </div>
 
           {!isConnected && (
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
-              <AlertDescription>Hubungkan wallet Anda terlebih dahulu</AlertDescription>
+              <AlertDescription>Please connect your wallet first</AlertDescription>
             </Alert>
           )}
 
@@ -212,7 +213,7 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
             <Alert>
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
-                Switch ke Mantle Network diperlukan
+                Switch to Mantle Network required
                 <Button variant="link" className="h-auto p-0 ml-2" onClick={switchToMantle}>
                   Switch
                 </Button>
@@ -224,33 +225,33 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="buy">
                 <ShoppingCart className="mr-2 h-4 w-4" />
-                Beli
+                Buy
               </TabsTrigger>
               <TabsTrigger value="sell">
                 <Tag className="mr-2 h-4 w-4" />
-                Jual
+                Sell
               </TabsTrigger>
             </TabsList>
 
             <TabsContent value="buy" className="space-y-4 pt-4">
               <div className="rounded-lg bg-secondary p-4">
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Harga NFT</span>
-                  <span className="font-semibold">{goatPriceInMNT.toFixed(4)} MNT</span>
+                  <span className="text-muted-foreground">NFT Price</span>
+                  <span className="font-semibold">{goatPriceInMNT.toFixed(2)} MNT</span>
                 </div>
                 <div className="mt-2 flex justify-between text-sm">
-                  <span className="text-muted-foreground">Gas Fee (estimasi)</span>
+                  <span className="text-muted-foreground">Gas Fee (estimate)</span>
                   <span>~0.001 MNT</span>
                 </div>
                 <div className="mt-3 flex justify-between border-t border-border pt-3">
                   <span className="font-medium">Total</span>
-                  <span className="font-bold text-primary">{(goatPriceInMNT + 0.001).toFixed(4)} MNT</span>
+                  <span className="font-bold text-primary">{(goatPriceInMNT + 0.001).toFixed(2)} MNT</span>
                 </div>
               </div>
 
               {balance && (
                 <p className="text-sm text-muted-foreground">
-                  Saldo Anda: <span className="font-medium">{balance} MNT</span>
+                  Your Balance: <span className="font-medium">{balance} MNT</span>
                 </p>
               )}
 
@@ -264,7 +265,7 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
               {txHash && (
                 <Alert className="border-primary bg-primary/10">
                   <AlertDescription className="flex items-center justify-between">
-                    <span>Transaksi terkirim!</span>
+                    <span>Transaction sent!</span>
                     <a
                       href={`https://explorer.mantle.xyz/tx/${txHash}`}
                       target="_blank"
@@ -286,7 +287,7 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
                 ) : (
                   <>
                     <ShoppingCart className="mr-2 h-4 w-4" />
-                    Beli Sekarang
+                    Buy Now
                   </>
                 )}
               </Button>
@@ -294,33 +295,33 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
 
             <TabsContent value="sell" className="space-y-4 pt-4">
               <div className="space-y-2">
-                <Label htmlFor="sellPrice">Harga Jual (MNT)</Label>
+                <Label htmlFor="sellPrice">Selling Price (MNT)</Label>
                 <Input
                   id="sellPrice"
                   type="number"
-                  step="0.001"
-                  placeholder="0.5"
+                  step="0.01"
+                  placeholder="500"
                   value={sellPrice}
                   onChange={(e) => setSellPrice(e.target.value)}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Harga rekomendasi: {goatPriceInMNT.toFixed(4)} MNT (berdasarkan nilai aset)
+                  Recommended price: {goatPriceInMNT.toFixed(2)} MNT (based on asset value)
                 </p>
               </div>
 
               {sellPrice && Number(sellPrice) > 0 && (
                 <div className="rounded-lg bg-secondary p-4">
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Harga Listing</span>
-                    <span className="font-semibold">{Number(sellPrice).toFixed(4)} MNT</span>
+                    <span className="text-muted-foreground">Listing Price</span>
+                    <span className="font-semibold">{Number(sellPrice).toFixed(2)} MNT</span>
                   </div>
                   <div className="mt-2 flex justify-between text-sm">
                     <span className="text-muted-foreground">Platform Fee (2%)</span>
-                    <span>-{(Number(sellPrice) * 0.02).toFixed(4)} MNT</span>
+                    <span>-{(Number(sellPrice) * 0.02).toFixed(2)} MNT</span>
                   </div>
                   <div className="mt-3 flex justify-between border-t border-border pt-3">
-                    <span className="font-medium">Anda Terima</span>
-                    <span className="font-bold text-primary">{(Number(sellPrice) * 0.98).toFixed(4)} MNT</span>
+                    <span className="font-medium">You Receive</span>
+                    <span className="font-bold text-primary">{(Number(sellPrice) * 0.98).toFixed(2)} MNT</span>
                   </div>
                 </div>
               )}
@@ -335,7 +336,7 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
               {txHash && (
                 <Alert className="border-primary bg-primary/10">
                   <AlertDescription className="flex items-center justify-between">
-                    <span>NFT berhasil di-listing!</span>
+                    <span>NFT listed successfully!</span>
                     <a
                       href={`https://explorer.mantle.xyz/tx/${txHash}`}
                       target="_blank"
@@ -357,14 +358,14 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
                 ) : (
                   <>
                     <Tag className="mr-2 h-4 w-4" />
-                    Listing untuk Dijual
+                    List for Sale
                   </>
                 )}
               </Button>
             </TabsContent>
           </Tabs>
 
-          <p className="text-center text-xs text-muted-foreground">Transaksi diproses di Mantle Network (L2)</p>
+          <p className="text-center text-xs text-muted-foreground">Transactions processed on Mantle Network (L2)</p>
         </div>
       </DialogContent>
     </Dialog>

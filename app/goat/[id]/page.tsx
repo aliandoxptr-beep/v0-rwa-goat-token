@@ -57,7 +57,7 @@ export default async function GoatDetailPage({ params }: GoatDetailPageProps) {
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-muted-foreground">Value</p>
-                    <p className="text-xl font-bold text-primary">Rp {(goat.value / 1000000).toFixed(1)}M</p>
+                    <p className="text-xl font-bold text-primary">${goat.value.toFixed(2)}</p>
                   </div>
                 </div>
 
@@ -119,19 +119,15 @@ export default async function GoatDetailPage({ params }: GoatDetailPageProps) {
                     </TableRow>
                     <TableRow>
                       <TableCell>Feed Cost (Monthly)</TableCell>
-                      <TableCell className="text-right font-medium">
-                        Rp {goat.feedCost.toLocaleString("id-ID")}
-                      </TableCell>
+                      <TableCell className="text-right font-medium">${goat.feedCost.toFixed(2)}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>Medicine Cost</TableCell>
-                      <TableCell className="text-right font-medium">
-                        Rp {goat.medicineCost.toLocaleString("id-ID")}
-                      </TableCell>
+                      <TableCell className="text-right font-medium">${goat.medicineCost.toFixed(2)}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>Total Cost</TableCell>
-                      <TableCell className="text-right font-medium">Rp {goat.cost.toLocaleString("id-ID")}</TableCell>
+                      <TableCell className="text-right font-medium">${goat.cost.toFixed(2)}</TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>

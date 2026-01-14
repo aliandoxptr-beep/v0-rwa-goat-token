@@ -39,7 +39,7 @@ export default function FinancialsPage() {
           </p>
         </div>
 
-        {/* Key Financial Metrics */}
+        {/* Key Financial Metrics - Updated to USD */}
         <div className="mb-10 grid grid-cols-2 gap-4 md:grid-cols-4">
           <Card>
             <CardContent className="flex items-center gap-4 p-4">
@@ -48,7 +48,7 @@ export default function FinancialsPage() {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Total Asset Value</p>
-                <p className="text-xl font-bold">Rp {(financialData.totalAssetValue / 1000000).toFixed(1)}M</p>
+                <p className="text-xl font-bold">${financialData.totalAssetValue.toLocaleString("en-US")}</p>
               </div>
             </CardContent>
           </Card>
@@ -59,7 +59,7 @@ export default function FinancialsPage() {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Total Revenue</p>
-                <p className="text-xl font-bold">Rp {(financialData.totalRevenue / 1000000).toFixed(1)}M</p>
+                <p className="text-xl font-bold">${financialData.totalRevenue.toLocaleString("en-US")}</p>
               </div>
             </CardContent>
           </Card>
@@ -70,7 +70,7 @@ export default function FinancialsPage() {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Net Profit</p>
-                <p className="text-xl font-bold text-primary">Rp {(financialData.netProfit / 1000000).toFixed(2)}M</p>
+                <p className="text-xl font-bold text-primary">${financialData.netProfit.toLocaleString("en-US")}</p>
               </div>
             </CardContent>
           </Card>
@@ -81,14 +81,14 @@ export default function FinancialsPage() {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Profit per NFT</p>
-                <p className="text-xl font-bold">Rp {financialData.profitPerNFT.toLocaleString("id-ID")}</p>
+                <p className="text-xl font-bold">${financialData.profitPerNFT.toFixed(2)}</p>
               </div>
             </CardContent>
           </Card>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-2">
-          {/* Revenue & Cost Breakdown */}
+          {/* Revenue & Cost Breakdown - Updated to USD */}
           <Card>
             <CardHeader>
               <CardTitle>Revenue & Cost Breakdown</CardTitle>
@@ -99,27 +99,25 @@ export default function FinancialsPage() {
               <div className="mt-6 space-y-3">
                 <div className="flex items-center justify-between rounded-lg bg-secondary p-3">
                   <span className="text-sm">Feed Cost</span>
-                  <span className="font-medium">Rp {financialData.expenses.feed.toLocaleString("id-ID")}</span>
+                  <span className="font-medium">${financialData.expenses.feed.toFixed(2)}</span>
                 </div>
                 <div className="flex items-center justify-between rounded-lg bg-secondary p-3">
                   <span className="text-sm">Medicine</span>
-                  <span className="font-medium">Rp {financialData.expenses.medicine.toLocaleString("id-ID")}</span>
+                  <span className="font-medium">${financialData.expenses.medicine.toFixed(2)}</span>
                 </div>
                 <div className="flex items-center justify-between rounded-lg bg-secondary p-3">
                   <span className="text-sm">Labor</span>
-                  <span className="font-medium">Rp {financialData.expenses.labor.toLocaleString("id-ID")}</span>
+                  <span className="font-medium">${financialData.expenses.labor.toFixed(2)}</span>
                 </div>
                 <div className="flex items-center justify-between rounded-lg bg-secondary p-3">
                   <span className="text-sm">Infrastructure</span>
-                  <span className="font-medium">
-                    Rp {financialData.expenses.infrastructure.toLocaleString("id-ID")}
-                  </span>
+                  <span className="font-medium">${financialData.expenses.infrastructure.toFixed(2)}</span>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Profit Calculation */}
+          {/* Profit Calculation - Updated to USD */}
           <Card>
             <CardHeader>
               <CardTitle>Profit Calculation</CardTitle>
@@ -140,10 +138,10 @@ export default function FinancialsPage() {
                   {goatsData.slice(0, 4).map((goat) => (
                     <TableRow key={goat.nftId}>
                       <TableCell className="font-medium">{goat.nftId}</TableCell>
-                      <TableCell>Rp {(goat.value / 1000000).toFixed(1)}M</TableCell>
-                      <TableCell>Rp {(goat.cost / 1000).toFixed(0)}K</TableCell>
+                      <TableCell>${goat.value.toFixed(2)}</TableCell>
+                      <TableCell>${goat.cost.toFixed(2)}</TableCell>
                       <TableCell className="text-right font-medium text-primary">
-                        Rp {((goat.value - goat.cost) / 1000000).toFixed(1)}M
+                        ${(goat.value - goat.cost).toFixed(2)}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -153,14 +151,14 @@ export default function FinancialsPage() {
           </Card>
         </div>
 
-        {/* Dividend Section */}
+        {/* Dividend Section - Updated to USD */}
         <Card className="mt-8">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="flex items-center gap-2">
                   Bi-Monthly Stablecoin Dividend
-                  <Badge variant="secondary">IDR-Stable Mock</Badge>
+                  <Badge variant="secondary">USDC</Badge>
                 </CardTitle>
                 <CardDescription>Automatic profit distribution to NFT holders every two months</CardDescription>
               </div>
@@ -175,7 +173,7 @@ export default function FinancialsPage() {
                     <span className="text-sm font-medium">Available to Claim</span>
                     <Badge variant="default">Active</Badge>
                   </div>
-                  <p className="mb-2 text-3xl font-bold">Rp {latestDividend.amountPerNFT.toLocaleString("id-ID")}</p>
+                  <p className="mb-2 text-3xl font-bold">${latestDividend.amountPerNFT.toFixed(2)}</p>
                   <p className="mb-6 text-sm text-muted-foreground">Per NFT you own</p>
                   <Button onClick={handleClaim} disabled={claimStatus !== "idle"} className="w-full" size="lg">
                     {claimStatus === "idle" && (
@@ -216,8 +214,8 @@ export default function FinancialsPage() {
                     {financialData.dividendHistory.map((dividend, i) => (
                       <TableRow key={i}>
                         <TableCell>{dividend.date}</TableCell>
-                        <TableCell>Rp {dividend.amountPerNFT.toLocaleString("id-ID")}</TableCell>
-                        <TableCell>Rp {dividend.totalDistributed.toLocaleString("id-ID")}</TableCell>
+                        <TableCell>${dividend.amountPerNFT.toFixed(2)}</TableCell>
+                        <TableCell>${dividend.totalDistributed.toFixed(2)}</TableCell>
                         <TableCell className="text-right">
                           <Badge variant={i === 0 ? "default" : "secondary"}>{i === 0 ? "Current" : "Paid"}</Badge>
                         </TableCell>

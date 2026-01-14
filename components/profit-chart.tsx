@@ -6,7 +6,7 @@ import { goatsData } from "@/lib/mock-data"
 export function ProfitChart() {
   const data = goatsData.map((goat) => ({
     name: goat.nftId.replace("GOAT-", "#"),
-    profit: (goat.value - goat.cost) / 1000000,
+    profit: goat.value - goat.cost,
   }))
 
   return (
@@ -20,7 +20,7 @@ export function ProfitChart() {
             axisLine={{ stroke: "hsl(var(--border))" }}
           />
           <YAxis
-            tickFormatter={(value) => `${value}M`}
+            tickFormatter={(value) => `$${value}`}
             tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
             axisLine={{ stroke: "hsl(var(--border))" }}
           />
@@ -30,7 +30,7 @@ export function ProfitChart() {
               border: "1px solid hsl(var(--border))",
               borderRadius: "8px",
             }}
-            formatter={(value: number) => [`Rp ${value.toFixed(2)}M`, "Profit"]}
+            formatter={(value: number) => [`$${value.toFixed(2)}`, "Profit"]}
           />
           <Bar dataKey="profit" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
         </BarChart>

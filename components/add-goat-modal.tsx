@@ -42,7 +42,7 @@ export function AddGoatModal({ open, onOpenChange, onSuccess }: AddGoatModalProp
     setTxHash(null)
 
     if (!isConnected) {
-      setError("Silakan hubungkan wallet terlebih dahulu")
+      setError("Please connect your wallet first")
       return
     }
 
@@ -50,7 +50,7 @@ export function AddGoatModal({ open, onOpenChange, onSuccess }: AddGoatModalProp
       try {
         await switchToMantle()
       } catch {
-        setError("Gagal switch ke Mantle network")
+        setError("Failed to switch to Mantle network")
         return
       }
     }
@@ -61,7 +61,7 @@ export function AddGoatModal({ open, onOpenChange, onSuccess }: AddGoatModalProp
       const provider = (window as any).ethereum
 
       if (!provider) {
-        throw new Error("Wallet provider tidak ditemukan")
+        throw new Error("Wallet provider not found")
       }
 
       // Prepare mint data
@@ -105,7 +105,7 @@ export function AddGoatModal({ open, onOpenChange, onSuccess }: AddGoatModalProp
       }, 3000)
     } catch (err: any) {
       console.error("[v0] Mint error:", err)
-      setError(err.message || "Gagal mint NFT kambing")
+      setError(err.message || "Failed to mint goat NFT")
       setIsLoading(false)
     }
   }
@@ -137,14 +137,14 @@ export function AddGoatModal({ open, onOpenChange, onSuccess }: AddGoatModalProp
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Plus className="h-5 w-5" />
-            Tambah Kambing Baru (Mint NFT)
+            Add New Goat (Mint NFT)
           </DialogTitle>
         </DialogHeader>
 
         {!isConnected && (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription>Hubungkan wallet Anda terlebih dahulu untuk mint NFT kambing</AlertDescription>
+            <AlertDescription>Connect your wallet first to mint a goat NFT</AlertDescription>
           </Alert>
         )}
 
@@ -152,7 +152,7 @@ export function AddGoatModal({ open, onOpenChange, onSuccess }: AddGoatModalProp
           <Alert>
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
-              Anda perlu switch ke Mantle Network untuk mint NFT
+              You need to switch to Mantle Network to mint NFT
               <Button variant="link" className="h-auto p-0 ml-2" onClick={switchToMantle}>
                 Switch Network
               </Button>
@@ -163,10 +163,10 @@ export function AddGoatModal({ open, onOpenChange, onSuccess }: AddGoatModalProp
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Nama Kambing</Label>
+              <Label htmlFor="name">Goat Name</Label>
               <Input
                 id="name"
-                placeholder="Contoh: Bella"
+                placeholder="e.g. Bella"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 required
@@ -186,7 +186,7 @@ export function AddGoatModal({ open, onOpenChange, onSuccess }: AddGoatModalProp
 
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="age">Umur (bulan)</Label>
+              <Label htmlFor="age">Age (months)</Label>
               <Input
                 id="age"
                 type="number"
@@ -197,7 +197,7 @@ export function AddGoatModal({ open, onOpenChange, onSuccess }: AddGoatModalProp
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="weight">Berat (kg)</Label>
+              <Label htmlFor="weight">Weight (kg)</Label>
               <Input
                 id="weight"
                 type="number"
@@ -209,7 +209,7 @@ export function AddGoatModal({ open, onOpenChange, onSuccess }: AddGoatModalProp
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="breed">Jenis</Label>
+              <Label htmlFor="breed">Breed</Label>
               <Select value={formData.breed} onValueChange={(value) => setFormData({ ...formData, breed: value })}>
                 <SelectTrigger>
                   <SelectValue />
@@ -226,7 +226,7 @@ export function AddGoatModal({ open, onOpenChange, onSuccess }: AddGoatModalProp
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="initialValue">Nilai Awal (MNT)</Label>
+            <Label htmlFor="initialValue">Initial Value (MNT)</Label>
             <Input
               id="initialValue"
               type="number"
@@ -237,15 +237,15 @@ export function AddGoatModal({ open, onOpenChange, onSuccess }: AddGoatModalProp
               required
             />
             <p className="text-xs text-muted-foreground">
-              Nilai ini akan dicatat di blockchain sebagai harga awal aset
+              This value will be recorded on blockchain as the initial asset price
             </p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Deskripsi (opsional)</Label>
+            <Label htmlFor="description">Description (optional)</Label>
             <Textarea
               id="description"
-              placeholder="Informasi tambahan tentang kambing..."
+              placeholder="Additional information about the goat..."
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               rows={3}
@@ -262,14 +262,14 @@ export function AddGoatModal({ open, onOpenChange, onSuccess }: AddGoatModalProp
           {txHash && (
             <Alert className="border-primary bg-primary/10">
               <AlertDescription>
-                Transaksi terkirim!{" "}
+                Transaction submitted!{" "}
                 <a
                   href={`https://explorer.mantle.xyz/tx/${txHash}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="underline text-primary"
                 >
-                  Lihat di Explorer
+                  View on Explorer
                 </a>
               </AlertDescription>
             </Alert>
@@ -282,7 +282,7 @@ export function AddGoatModal({ open, onOpenChange, onSuccess }: AddGoatModalProp
               className="flex-1 bg-transparent"
               onClick={() => onOpenChange(false)}
             >
-              Batal
+              Cancel
             </Button>
             <Button type="submit" className="flex-1" disabled={!isConnected || isLoading}>
               {isLoading ? (
@@ -293,7 +293,7 @@ export function AddGoatModal({ open, onOpenChange, onSuccess }: AddGoatModalProp
               ) : (
                 <>
                   <Plus className="mr-2 h-4 w-4" />
-                  Mint NFT Kambing
+                  Mint Goat NFT
                 </>
               )}
             </Button>

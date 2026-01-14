@@ -4,8 +4,8 @@ export function TrustSection() {
   const features = [
     {
       icon: Users,
-      title: "Managed by BUMDes",
-      description: "Village-owned enterprise ensuring community benefit and accountability",
+      title: "Village Enterprise Managed",
+      description: "Professionally managed village-owned enterprise ensuring community benefit and accountability",
     },
     {
       icon: Sprout,

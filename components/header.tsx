@@ -36,7 +36,7 @@ export function Header() {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
               <span className="text-lg font-bold text-primary-foreground">G</span>
             </div>
-            <span className="text-lg font-semibold">RWA Goat</span>
+            <span className="text-lg font-semibold">Garosta</span>
           </Link>
 
           <nav className="hidden items-center gap-6 md:flex">
