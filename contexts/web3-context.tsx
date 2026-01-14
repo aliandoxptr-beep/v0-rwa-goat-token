@@ -1,7 +1,7 @@
 "use client"
 
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react"
-import { MANTLE_NETWORK, SUPPORTED_WALLETS, type WalletInfo } from "@/lib/web3-config"
+import { MANTLE_MAINNET, MANTLE_TESTNET, SUPPORTED_WALLETS, type WalletInfo, type NetworkType } from "@/lib/web3-config"
 
 interface Web3State {
   isConnected: boolean
@@ -12,6 +12,7 @@ interface Web3State {
   isCorrectNetwork: boolean
   isConnecting: boolean
   error: string | null
+  networkType: NetworkType
 }
 
 interface Web3ContextType extends Web3State {
@@ -19,6 +20,8 @@ interface Web3ContextType extends Web3State {
   disconnect: () => void
   switchToMantle: () => Promise<void>
   getProvider: (wallet: WalletInfo) => any
+  setNetworkType: (type: NetworkType) => void
+  getCurrentNetwork: () => typeof MANTLE_MAINNET
 }
 
 const Web3Context = createContext<Web3ContextType | null>(null)
@@ -33,9 +36,14 @@ export function Web3Provider({ children }: { children: ReactNode }) {
     isCorrectNetwork: false,
     isConnecting: false,
     error: null,
+    networkType: "testnet",
   })
 
   const [currentProvider, setCurrentProvider] = useState<any>(null)
+
+  const getCurrentNetwork = useCallback(() => {
+    return state.networkType === "mainnet" ? MANTLE_MAINNET : MANTLE_TESTNET
+  }, [state.networkType])
 
   const updateBalance = useCallback(async (provider: any, address: string) => {
     try {
@@ -56,25 +64,25 @@ export function Web3Provider({ children }: { children: ReactNode }) {
 
   const switchToMantle = useCallback(async () => {
     if (!currentProvider) return
+    const network = state.networkType === "mainnet" ? MANTLE_MAINNET : MANTLE_TESTNET
 
     try {
       await currentProvider.request({
         method: "wallet_switchEthereumChain",
-        params: [{ chainId: MANTLE_NETWORK.chainIdHex }],
+        params: [{ chainId: network.chainIdHex }],
       })
     } catch (switchError: any) {
-      // Chain not added, try to add it
       if (switchError.code === 4902) {
         try {
           await currentProvider.request({
             method: "wallet_addEthereumChain",
             params: [
               {
-                chainId: MANTLE_NETWORK.chainIdHex,
-                chainName: MANTLE_NETWORK.chainName,
-                nativeCurrency: MANTLE_NETWORK.nativeCurrency,
-                rpcUrls: MANTLE_NETWORK.rpcUrls,
-                blockExplorerUrls: MANTLE_NETWORK.blockExplorerUrls,
+                chainId: network.chainIdHex,
+                chainName: network.chainName,
+                nativeCurrency: network.nativeCurrency,
+                rpcUrls: network.rpcUrls,
+                blockExplorerUrls: network.blockExplorerUrls,
               },
             ],
           })
@@ -85,41 +93,73 @@ export function Web3Provider({ children }: { children: ReactNode }) {
         throw switchError
       }
     }
-  }, [currentProvider])
+  }, [currentProvider, state.networkType])
+
+  const setNetworkType = useCallback(
+    async (type: NetworkType) => {
+      setState((prev) => ({ ...prev, networkType: type }))
+      localStorage.setItem("garosta_network_type", type)
+
+      // If connected, switch to the new network
+      if (currentProvider && state.isConnected) {
+        const network = type === "mainnet" ? MANTLE_MAINNET : MANTLE_TESTNET
+        try {
+          await currentProvider.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: network.chainIdHex }],
+          })
+        } catch (switchError: any) {
+          if (switchError.code === 4902) {
+            await currentProvider.request({
+              method: "wallet_addEthereumChain",
+              params: [
+                {
+                  chainId: network.chainIdHex,
+                  chainName: network.chainName,
+                  nativeCurrency: network.nativeCurrency,
+                  rpcUrls: network.rpcUrls,
+                  blockExplorerUrls: network.blockExplorerUrls,
+                },
+              ],
+            })
+          }
+        }
+      }
+    },
+    [currentProvider, state.isConnected],
+  )
 
   const connect = useCallback(
     async (wallet: WalletInfo) => {
       setState((prev) => ({ ...prev, isConnecting: true, error: null }))
+      const network = state.networkType === "mainnet" ? MANTLE_MAINNET : MANTLE_TESTNET
 
       try {
         const provider = getProvider(wallet)
 
         if (!provider) {
-          // Mobile deep link
           if (wallet.deepLink && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
             window.location.href = wallet.deepLink
             setState((prev) => ({ ...prev, isConnecting: false }))
             return
           }
-          throw new Error(`${wallet.name} tidak terdeteksi. Silakan install terlebih dahulu.`)
+          throw new Error(`${wallet.name} not detected. Please install it first.`)
         }
 
-        // Request accounts
         const accounts = await provider.request({
           method: "eth_requestAccounts",
         })
 
         if (!accounts || accounts.length === 0) {
-          throw new Error("Tidak ada akun yang tersedia")
+          throw new Error("No accounts available")
         }
 
         const address = accounts[0]
         setCurrentProvider(provider)
 
-        // Get chain ID
         const chainIdHex = await provider.request({ method: "eth_chainId" })
         const chainId = Number.parseInt(chainIdHex, 16)
-        const isCorrectNetwork = chainId === MANTLE_NETWORK.chainId
+        const isCorrectNetwork = chainId === network.chainId
 
         setState((prev) => ({
           ...prev,
@@ -131,12 +171,11 @@ export function Web3Provider({ children }: { children: ReactNode }) {
           isConnecting: false,
         }))
 
-        // Switch to Mantle if not on correct network
         if (!isCorrectNetwork) {
           try {
             await provider.request({
               method: "wallet_switchEthereumChain",
-              params: [{ chainId: MANTLE_NETWORK.chainIdHex }],
+              params: [{ chainId: network.chainIdHex }],
             })
           } catch (switchError: any) {
             if (switchError.code === 4902) {
@@ -144,11 +183,11 @@ export function Web3Provider({ children }: { children: ReactNode }) {
                 method: "wallet_addEthereumChain",
                 params: [
                   {
-                    chainId: MANTLE_NETWORK.chainIdHex,
-                    chainName: MANTLE_NETWORK.chainName,
-                    nativeCurrency: MANTLE_NETWORK.nativeCurrency,
-                    rpcUrls: MANTLE_NETWORK.rpcUrls,
-                    blockExplorerUrls: MANTLE_NETWORK.blockExplorerUrls,
+                    chainId: network.chainIdHex,
+                    chainName: network.chainName,
+                    nativeCurrency: network.nativeCurrency,
+                    rpcUrls: network.rpcUrls,
+                    blockExplorerUrls: network.blockExplorerUrls,
                   },
                 ],
               })
@@ -156,25 +195,22 @@ export function Web3Provider({ children }: { children: ReactNode }) {
           }
         }
 
-        // Get balance
         await updateBalance(provider, address)
-
-        // Save to localStorage
-        localStorage.setItem("rwa_goat_wallet", wallet.id)
+        localStorage.setItem("garosta_wallet", wallet.id)
       } catch (err: any) {
         setState((prev) => ({
           ...prev,
           isConnecting: false,
-          error: err.message || "Gagal terhubung ke wallet",
+          error: err.message || "Failed to connect wallet",
         }))
         throw err
       }
     },
-    [getProvider, updateBalance],
+    [getProvider, updateBalance, state.networkType],
   )
 
   const disconnect = useCallback(() => {
-    setState({
+    setState((prev) => ({
       isConnected: false,
       address: null,
       chainId: null,
@@ -183,14 +219,16 @@ export function Web3Provider({ children }: { children: ReactNode }) {
       isCorrectNetwork: false,
       isConnecting: false,
       error: null,
-    })
+      networkType: prev.networkType, // Keep network type
+    }))
     setCurrentProvider(null)
-    localStorage.removeItem("rwa_goat_wallet")
+    localStorage.removeItem("garosta_wallet")
   }, [])
 
   // Listen for account and chain changes
   useEffect(() => {
     if (!currentProvider) return
+    const network = state.networkType === "mainnet" ? MANTLE_MAINNET : MANTLE_TESTNET
 
     const handleAccountsChanged = (accounts: string[]) => {
       if (accounts.length === 0) {
@@ -206,7 +244,7 @@ export function Web3Provider({ children }: { children: ReactNode }) {
       setState((prev) => ({
         ...prev,
         chainId,
-        isCorrectNetwork: chainId === MANTLE_NETWORK.chainId,
+        isCorrectNetwork: chainId === network.chainId,
       }))
       if (state.address) {
         updateBalance(currentProvider, state.address)
@@ -220,11 +258,18 @@ export function Web3Provider({ children }: { children: ReactNode }) {
       currentProvider.removeListener("accountsChanged", handleAccountsChanged)
       currentProvider.removeListener("chainChanged", handleChainChanged)
     }
-  }, [currentProvider, disconnect, state.address, updateBalance])
+  }, [currentProvider, disconnect, state.address, state.networkType, updateBalance])
+
+  useEffect(() => {
+    const savedNetworkType = localStorage.getItem("garosta_network_type") as NetworkType | null
+    if (savedNetworkType) {
+      setState((prev) => ({ ...prev, networkType: savedNetworkType }))
+    }
+  }, [])
 
   // Auto-reconnect on page load
   useEffect(() => {
-    const savedWalletId = localStorage.getItem("rwa_goat_wallet")
+    const savedWalletId = localStorage.getItem("garosta_wallet")
     if (savedWalletId) {
       const wallet = SUPPORTED_WALLETS.find((w) => w.id === savedWalletId)
       if (wallet) {
@@ -238,7 +283,7 @@ export function Web3Provider({ children }: { children: ReactNode }) {
               }
             })
             .catch(() => {
-              localStorage.removeItem("rwa_goat_wallet")
+              localStorage.removeItem("garosta_wallet")
             })
         }
       }
@@ -253,6 +298,8 @@ export function Web3Provider({ children }: { children: ReactNode }) {
         disconnect,
         switchToMantle,
         getProvider,
+        setNetworkType,
+        getCurrentNetwork,
       }}
     >
       {children}

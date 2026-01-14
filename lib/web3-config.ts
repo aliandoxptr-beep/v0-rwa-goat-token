@@ -15,7 +15,7 @@ export const MANTLE_MAINNET = {
 export const MANTLE_TESTNET = {
   chainId: 5003,
   chainIdHex: "0x138B",
-  chainName: "Mantle Sepolia Testnet",
+  chainName: "Mantle Sepolia",
   nativeCurrency: {
     name: "Mantle",
     symbol: "MNT",
@@ -25,7 +25,20 @@ export const MANTLE_TESTNET = {
   blockExplorerUrls: ["https://explorer.sepolia.mantle.xyz"],
 }
 
-export const MANTLE_NETWORK = MANTLE_MAINNET
+export type NetworkType = "mainnet" | "testnet"
+
+export const MANTLE_FAUCET_URL = "https://faucet.sepolia.mantle.xyz"
+
+export function getMantleNetwork(networkType: NetworkType) {
+  return networkType === "mainnet" ? MANTLE_MAINNET : MANTLE_TESTNET
+}
+
+// Default network (can be changed by user)
+export let MANTLE_NETWORK = MANTLE_TESTNET
+
+export function setMantleNetwork(networkType: NetworkType) {
+  MANTLE_NETWORK = networkType === "mainnet" ? MANTLE_MAINNET : MANTLE_TESTNET
+}
 
 export interface WalletInfo {
   id: string
