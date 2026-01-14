@@ -1,132 +1,179 @@
-// Smart Contract ABI dan konfigurasi untuk RWA Goat NFT
+// Smart Contract ABI dan konfigurasi untuk Garosta Goat NFT
 // Deployed on Mantle L2 Network
 
-export const GOAT_NFT_CONTRACT = {
-  // Contract address di Mantle Mainnet (mock untuk demo)
-  address: "0x742d35Cc6634C0532925a3b844Bc9e7595f8fE00",
+export const CONTRACT_ADDRESSES = {
+  // Replace with your deployed contract address after deployment
+  testnet: "0x0000000000000000000000000000000000000000", // Mantle Sepolia
+  mainnet: "0x742d35Cc6634C0532925a3b844Bc9e7595f8fE00", // Mantle Mainnet
+}
 
-  // Contract ABI untuk interaksi dengan NFT
-  abi: [
-    // Read Functions
-    {
-      name: "balanceOf",
-      type: "function",
-      stateMutability: "view",
-      inputs: [{ name: "owner", type: "address" }],
-      outputs: [{ name: "", type: "uint256" }],
-    },
-    {
-      name: "ownerOf",
-      type: "function",
-      stateMutability: "view",
-      inputs: [{ name: "tokenId", type: "uint256" }],
-      outputs: [{ name: "", type: "address" }],
-    },
-    {
-      name: "tokenURI",
-      type: "function",
-      stateMutability: "view",
-      inputs: [{ name: "tokenId", type: "uint256" }],
-      outputs: [{ name: "", type: "string" }],
-    },
-    {
-      name: "getGoatData",
-      type: "function",
-      stateMutability: "view",
-      inputs: [{ name: "tokenId", type: "uint256" }],
-      outputs: [
-        { name: "rfid", type: "string" },
-        { name: "name", type: "string" },
-        { name: "birthDate", type: "uint256" },
-        { name: "weight", type: "uint256" },
-        { name: "isListed", type: "bool" },
-        { name: "price", type: "uint256" },
-      ],
-    },
-    {
-      name: "getListingPrice",
-      type: "function",
-      stateMutability: "view",
-      inputs: [{ name: "tokenId", type: "uint256" }],
-      outputs: [{ name: "", type: "uint256" }],
-    },
-    // Write Functions
-    {
-      name: "mintGoat",
-      type: "function",
-      stateMutability: "payable",
-      inputs: [
-        { name: "rfid", type: "string" },
-        { name: "name", type: "string" },
-        { name: "birthDate", type: "uint256" },
-        { name: "weight", type: "uint256" },
-        { name: "uri", type: "string" },
-      ],
-      outputs: [{ name: "tokenId", type: "uint256" }],
-    },
-    {
-      name: "listForSale",
-      type: "function",
-      stateMutability: "nonpayable",
-      inputs: [
-        { name: "tokenId", type: "uint256" },
-        { name: "price", type: "uint256" },
-      ],
-      outputs: [],
-    },
-    {
-      name: "cancelListing",
-      type: "function",
-      stateMutability: "nonpayable",
-      inputs: [{ name: "tokenId", type: "uint256" }],
-      outputs: [],
-    },
-    {
-      name: "buyGoat",
-      type: "function",
-      stateMutability: "payable",
-      inputs: [{ name: "tokenId", type: "uint256" }],
-      outputs: [],
-    },
-    {
-      name: "updateWeight",
-      type: "function",
-      stateMutability: "nonpayable",
-      inputs: [
-        { name: "tokenId", type: "uint256" },
-        { name: "newWeight", type: "uint256" },
-      ],
-      outputs: [],
-    },
-    // Events
-    {
-      name: "GoatMinted",
-      type: "event",
-      inputs: [
-        { name: "tokenId", type: "uint256", indexed: true },
-        { name: "owner", type: "address", indexed: true },
-        { name: "rfid", type: "string", indexed: false },
-      ],
-    },
-    {
-      name: "GoatListed",
-      type: "event",
-      inputs: [
-        { name: "tokenId", type: "uint256", indexed: true },
-        { name: "price", type: "uint256", indexed: false },
-      ],
-    },
-    {
-      name: "GoatSold",
-      type: "event",
-      inputs: [
-        { name: "tokenId", type: "uint256", indexed: true },
-        { name: "seller", type: "address", indexed: true },
-        { name: "buyer", type: "address", indexed: true },
-        { name: "price", type: "uint256", indexed: false },
-      ],
-    },
-  ],
+export const GOAT_NFT_ABI = [
+  // Read Functions
+  {
+    name: "balanceOf",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "owner", type: "address" }],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    name: "ownerOf",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [{ name: "", type: "address" }],
+  },
+  {
+    name: "tokenURI",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [{ name: "", type: "string" }],
+  },
+  {
+    name: "totalSupply",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    name: "getGoatData",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [
+      { name: "rfid", type: "string" },
+      { name: "name", type: "string" },
+      { name: "birthDate", type: "uint256" },
+      { name: "weight", type: "uint256" },
+      { name: "breed", type: "string" },
+      { name: "isListed", type: "bool" },
+      { name: "price", type: "uint256" },
+      { name: "createdAt", type: "uint256" },
+    ],
+  },
+  {
+    name: "getListingPrice",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    name: "mintFee",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  // Write Functions
+  {
+    name: "mintGoat",
+    type: "function",
+    stateMutability: "payable",
+    inputs: [
+      { name: "rfid", type: "string" },
+      { name: "name", type: "string" },
+      { name: "birthDate", type: "uint256" },
+      { name: "weight", type: "uint256" },
+      { name: "breed", type: "string" },
+      { name: "uri", type: "string" },
+    ],
+    outputs: [{ name: "tokenId", type: "uint256" }],
+  },
+  {
+    name: "listForSale",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      { name: "price", type: "uint256" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "cancelListing",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [],
+  },
+  {
+    name: "buyGoat",
+    type: "function",
+    stateMutability: "payable",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [],
+  },
+  {
+    name: "updateWeight",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      { name: "newWeight", type: "uint256" },
+    ],
+    outputs: [],
+  },
+  // Events
+  {
+    name: "GoatMinted",
+    type: "event",
+    inputs: [
+      { name: "tokenId", type: "uint256", indexed: true },
+      { name: "owner", type: "address", indexed: true },
+      { name: "rfid", type: "string", indexed: false },
+      { name: "name", type: "string", indexed: false },
+      { name: "value", type: "uint256", indexed: false },
+    ],
+  },
+  {
+    name: "GoatListed",
+    type: "event",
+    inputs: [
+      { name: "tokenId", type: "uint256", indexed: true },
+      { name: "seller", type: "address", indexed: true },
+      { name: "price", type: "uint256", indexed: false },
+    ],
+  },
+  {
+    name: "GoatDelisted",
+    type: "event",
+    inputs: [
+      { name: "tokenId", type: "uint256", indexed: true },
+      { name: "seller", type: "address", indexed: true },
+    ],
+  },
+  {
+    name: "GoatSold",
+    type: "event",
+    inputs: [
+      { name: "tokenId", type: "uint256", indexed: true },
+      { name: "seller", type: "address", indexed: true },
+      { name: "buyer", type: "address", indexed: true },
+      { name: "price", type: "uint256", indexed: false },
+    ],
+  },
+  {
+    name: "GoatWeightUpdated",
+    type: "event",
+    inputs: [
+      { name: "tokenId", type: "uint256", indexed: true },
+      { name: "oldWeight", type: "uint256", indexed: false },
+      { name: "newWeight", type: "uint256", indexed: false },
+    ],
+  },
+] as const
+
+export const GOAT_NFT_CONTRACT = {
+  address: CONTRACT_ADDRESSES.testnet,
+  abi: GOAT_NFT_ABI,
+}
+
+// Helper to get contract address based on network
+export function getContractAddress(networkType: "mainnet" | "testnet"): string {
+  return CONTRACT_ADDRESSES[networkType]
 }
 
 // Marketplace contract untuk trading
@@ -229,17 +276,21 @@ function simpleHash(str: string): string {
 }
 
 // Convert MNT to Wei
-export function toWei(mnt: number): string {
-  return BigInt(Math.floor(mnt * 1e18)).toString()
+export function toWei(mnt: number): bigint {
+  return BigInt(Math.floor(mnt * 1e18))
 }
 
 // Convert Wei to MNT
-export function fromWei(wei: string): number {
-  return Number(BigInt(wei)) / 1e18
+export function fromWei(wei: bigint | string): number {
+  const weiBigInt = typeof wei === "string" ? BigInt(wei) : wei
+  return Number(weiBigInt) / 1e18
 }
 
 // Format price in MNT
-export function formatMNT(wei: string): string {
+export function formatMNT(wei: bigint | string): string {
   const mnt = fromWei(wei)
+  if (mnt < 0.0001) {
+    return mnt.toExponential(2) + " MNT"
+  }
   return mnt.toFixed(4) + " MNT"
 }

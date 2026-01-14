@@ -1,0 +1,17 @@
+{
+  "name": "garosta-contracts",
+  "version": "1.0.0",
+  "description": "Garosta RWA Goat NFT Smart Contracts",
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "deploy:testnet": "npx hardhat run scripts/deploy.js --network mantleSepolia",
+    "deploy:mainnet": "npx hardhat run scripts/deploy.js --network mantleMainnet",
+    "verify": "npx hardhat verify --network mantleSepolia"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@openzeppelin/contracts": "^5.0.0",
+    "hardhat": "^2.19.0",
+    "dotenv": "^16.3.1"
+  }
+}
