@@ -25,7 +25,6 @@ export const MANTLE_TESTNET = {
   blockExplorerUrls: ["https://explorer.sepolia.mantle.xyz"],
 }
 
-// Use mainnet by default, change to MANTLE_TESTNET for testing
 export const MANTLE_NETWORK = MANTLE_MAINNET
 
 export interface WalletInfo {
@@ -42,7 +41,7 @@ export const SUPPORTED_WALLETS: WalletInfo[] = [
   {
     id: "metamask",
     name: "MetaMask",
-    icon: "/wallets/metamask.svg",
+    icon: "https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg",
     description: "Popular browser extension wallet",
     downloadUrl: "https://metamask.io/download/",
     checkProvider: () => {
@@ -57,7 +56,7 @@ export const SUPPORTED_WALLETS: WalletInfo[] = [
   {
     id: "okx",
     name: "OKX Wallet",
-    icon: "/wallets/okx.svg",
+    icon: "/wallets/okx.png",
     description: "Multi-chain Web3 wallet by OKX",
     downloadUrl: "https://www.okx.com/web3",
     deepLink: "okx://wallet/dapp",
@@ -69,7 +68,7 @@ export const SUPPORTED_WALLETS: WalletInfo[] = [
   {
     id: "trust",
     name: "Trust Wallet",
-    icon: "/wallets/trust.svg",
+    icon: "/wallets/trust.png",
     description: "Secure multi-coin wallet",
     downloadUrl: "https://trustwallet.com/download",
     deepLink: "trust://browser_enable",
@@ -81,21 +80,9 @@ export const SUPPORTED_WALLETS: WalletInfo[] = [
     },
   },
   {
-    id: "haha",
-    name: "HAHA Wallet",
-    icon: "/wallets/haha.svg",
-    description: "Social Web3 wallet",
-    downloadUrl: "https://haha.me/",
-    deepLink: "haha://",
-    checkProvider: () => {
-      if (typeof window === "undefined") return null
-      return (window as any).haha || ((window as any).ethereum?.isHaha ? (window as any).ethereum : null)
-    },
-  },
-  {
     id: "coinbase",
     name: "Coinbase Wallet",
-    icon: "/wallets/coinbase.svg",
+    icon: "/wallets/coinbase.png",
     description: "Self-custody crypto wallet",
     downloadUrl: "https://www.coinbase.com/wallet/downloads",
     checkProvider: () => {
@@ -110,7 +97,7 @@ export const SUPPORTED_WALLETS: WalletInfo[] = [
   {
     id: "rabby",
     name: "Rabby Wallet",
-    icon: "/wallets/rabby.svg",
+    icon: "/wallets/rabby.png",
     description: "Better UX for DeFi users",
     downloadUrl: "https://rabby.io/",
     checkProvider: () => {
