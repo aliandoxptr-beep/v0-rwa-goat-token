@@ -22,6 +22,7 @@ interface Web3ContextType extends Web3State {
   getProvider: (wallet: WalletInfo) => any
   setNetworkType: (type: NetworkType) => void
   getCurrentNetwork: () => typeof MANTLE_MAINNET
+  getConnectedProvider: () => any
 }
 
 const Web3Context = createContext<Web3ContextType | null>(null)
@@ -290,6 +291,10 @@ export function Web3Provider({ children }: { children: ReactNode }) {
     }
   }, [connect, getProvider])
 
+  const getConnectedProvider = useCallback(() => {
+    return currentProvider
+  }, [currentProvider])
+
   return (
     <Web3Context.Provider
       value={{
@@ -300,6 +305,7 @@ export function Web3Provider({ children }: { children: ReactNode }) {
         getProvider,
         setNetworkType,
         getCurrentNetwork,
+        getConnectedProvider,
       }}
     >
       {children}

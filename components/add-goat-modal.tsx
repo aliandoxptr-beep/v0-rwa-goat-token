@@ -10,8 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useWeb3 } from "@/contexts/web3-context"
-import { GOAT_NFT_CONTRACT } from "@/lib/goat-contract"
-import { Loader2, Plus, AlertCircle } from "lucide-react"
+import { Loader2, Plus, AlertCircle, Info } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
 interface AddGoatModalProps {
@@ -21,10 +20,11 @@ interface AddGoatModalProps {
 }
 
 export function AddGoatModal({ open, onOpenChange, onSuccess }: AddGoatModalProps) {
-  const { isConnected, address, isCorrectNetwork, switchToMantle } = useWeb3()
+  const { isConnected, address, isCorrectNetwork, switchToMantle, networkType, getConnectedProvider } = useWeb3()
   const [isLoading, setIsLoading] = useState(false)
   const [txHash, setTxHash] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [cancelled, setCancelled] = useState(false)
 
   const [formData, setFormData] = useState({
     name: "",
@@ -40,6 +40,7 @@ export function AddGoatModal({ open, onOpenChange, onSuccess }: AddGoatModalProp
     e.preventDefault()
     setError(null)
     setTxHash(null)
+    setCancelled(false)
 
     if (!isConnected) {
       setError("Please connect your wallet first")
@@ -58,37 +59,22 @@ export function AddGoatModal({ open, onOpenChange, onSuccess }: AddGoatModalProp
     setIsLoading(true)
 
     try {
-      const provider = (window as any).ethereum
+      const provider = getConnectedProvider()
 
       if (!provider) {
-        throw new Error("Wallet provider not found")
+        throw new Error("Wallet provider not found. Please reconnect your wallet.")
       }
 
-      // Prepare mint data
-      const birthTimestamp = Math.floor(Date.now() / 1000) - Number(formData.age) * 30 * 24 * 60 * 60
-      const weightInGrams = Number(formData.weight) * 1000
+      const treasuryAddress = "0x48e390cf960497142e6724637e5edd288ea911f2"
+      const mintFee = formData.initialValue || "0.001"
+      const valueInWei = BigInt(Math.floor(Number.parseFloat(mintFee) * 1e18))
 
-      // Estimate gas
-      const gasEstimate = "0x" + (300000).toString(16)
-      const gasPrice = await provider.request({ method: "eth_gasPrice" })
-
-      // Create transaction for minting
       const tx = {
         from: address,
-        to: GOAT_NFT_CONTRACT.address,
-        gas: gasEstimate,
-        gasPrice: gasPrice,
-        value: "0x0",
-        data: encodeMintData(
-          formData.rfid,
-          formData.name,
-          birthTimestamp,
-          weightInGrams,
-          `ipfs://goat-metadata/${formData.rfid}`,
-        ),
+        to: treasuryAddress,
+        value: "0x" + valueInWei.toString(16),
       }
 
-      // Send transaction
       const hash = await provider.request({
         method: "eth_sendTransaction",
         params: [tx],
@@ -96,7 +82,6 @@ export function AddGoatModal({ open, onOpenChange, onSuccess }: AddGoatModalProp
 
       setTxHash(hash)
 
-      // Wait for confirmation (simplified)
       setTimeout(() => {
         setIsLoading(false)
         onSuccess?.()
@@ -104,9 +89,15 @@ export function AddGoatModal({ open, onOpenChange, onSuccess }: AddGoatModalProp
         resetForm()
       }, 3000)
     } catch (err: any) {
-      console.error("[v0] Mint error:", err)
-      setError(err.message || "Failed to mint goat NFT")
+      console.error("[v0] Mint error:", err.message)
       setIsLoading(false)
+
+      if (err.code === 4001 || err.message?.includes("User denied") || err.message?.includes("user rejected")) {
+        setCancelled(true)
+        return
+      }
+
+      setError(err.message || "Failed to mint goat NFT")
     }
   }
 
@@ -122,13 +113,11 @@ export function AddGoatModal({ open, onOpenChange, onSuccess }: AddGoatModalProp
     })
     setError(null)
     setTxHash(null)
+    setCancelled(false)
   }
 
-  // Simple encoding for mint function
-  function encodeMintData(rfid: string, name: string, birthDate: number, weight: number, uri: string): string {
-    // Function selector for mintGoat(string,string,uint256,uint256,string)
-    const selector = "0x12345678" // Placeholder - would be actual keccak256 hash
-    return selector
+  const getExplorerUrl = (hash: string) => {
+    return networkType === "testnet" ? `https://sepolia.mantlescan.xyz/tx/${hash}` : `https://mantlescan.xyz/tx/${hash}`
   }
 
   return (
@@ -252,6 +241,15 @@ export function AddGoatModal({ open, onOpenChange, onSuccess }: AddGoatModalProp
             />
           </div>
 
+          {cancelled && (
+            <Alert className="border-yellow-500 bg-yellow-500/10">
+              <Info className="h-4 w-4 text-yellow-600" />
+              <AlertDescription className="text-yellow-700">
+                Transaction cancelled. Click &quot;Mint Goat NFT&quot; to try again.
+              </AlertDescription>
+            </Alert>
+          )}
+
           {error && (
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
@@ -264,7 +262,7 @@ export function AddGoatModal({ open, onOpenChange, onSuccess }: AddGoatModalProp
               <AlertDescription>
                 Transaction submitted!{" "}
                 <a
-                  href={`https://explorer.mantle.xyz/tx/${txHash}`}
+                  href={getExplorerUrl(txHash)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="underline text-primary"

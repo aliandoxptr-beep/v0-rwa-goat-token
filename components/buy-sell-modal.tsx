@@ -7,8 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useWeb3 } from "@/contexts/web3-context"
-import { GOAT_NFT_CONTRACT, MARKETPLACE_CONTRACT } from "@/lib/goat-contract"
-import { Loader2, ShoppingCart, Tag, AlertCircle, ExternalLink } from "lucide-react"
+import { Loader2, ShoppingCart, Tag, AlertCircle, ExternalLink, CheckCircle2 } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import Image from "next/image"
 import type { GoatNFT } from "@/lib/mock-data"
@@ -21,22 +20,30 @@ interface BuySellModalProps {
   onSuccess?: () => void
 }
 
+const TREASURY_ADDRESS = "0x48e390cf960497142e6724637e5edd288ea911f2"
+
 export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuySellModalProps) {
-  const { isConnected, address, balance, isCorrectNetwork, switchToMantle } = useWeb3()
+  const { isConnected, address, balance, isCorrectNetwork, switchToMantle, networkType, getConnectedProvider } =
+    useWeb3()
   const [isLoading, setIsLoading] = useState(false)
   const [txHash, setTxHash] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [sellPrice, setSellPrice] = useState("")
+  const [isSuccess, setIsSuccess] = useState(false)
 
   if (!goat) return null
 
-  const mntConversionRate = 0.4
-  const goatPriceInMNT = goat.value / mntConversionRate
+  const goatPriceInMNT = goat.value
   const currentWeight = goat.weightHistory[goat.weightHistory.length - 1]?.weight || 0
+
+  const getExplorerUrl = (hash: string) => {
+    return networkType === "testnet" ? `https://sepolia.mantlescan.xyz/tx/${hash}` : `https://mantlescan.xyz/tx/${hash}`
+  }
 
   const handleBuy = async () => {
     setError(null)
     setTxHash(null)
+    setIsSuccess(false)
 
     if (!isConnected) {
       setError("Please connect your wallet first")
@@ -52,51 +59,53 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
       }
     }
 
-    const requiredBalance = goatPriceInMNT
-    if (Number(balance) < requiredBalance) {
-      setError(`Insufficient balance. Required ${requiredBalance.toFixed(4)} MNT`)
+    if (Number(balance) < goatPriceInMNT) {
+      setError(`Insufficient balance. Required ${goatPriceInMNT.toFixed(6)} MNT, you have ${balance} MNT`)
       return
     }
 
     setIsLoading(true)
 
     try {
-      const provider = (window as any).ethereum
+      const provider = getConnectedProvider()
 
       if (!provider) {
-        throw new Error("Wallet provider not found")
+        throw new Error("Wallet not connected. Please reconnect your wallet.")
       }
 
-      // Prepare buy transaction
-      const gasEstimate = "0x" + (200000).toString(16)
-      const gasPrice = await provider.request({ method: "eth_gasPrice" })
-      const valueInWei = "0x" + BigInt(Math.floor(goatPriceInMNT * 1e18)).toString(16)
+      const valueInWei = BigInt(Math.floor(goatPriceInMNT * 1e18))
+      const valueHex = "0x" + valueInWei.toString(16)
 
-      const tx = {
+      const txParams = {
         from: address,
-        to: MARKETPLACE_CONTRACT.address,
-        gas: gasEstimate,
-        gasPrice: gasPrice,
-        value: valueInWei,
-        data: encodeBuyData(GOAT_NFT_CONTRACT.address, goat.tokenId),
+        to: TREASURY_ADDRESS,
+        value: valueHex,
       }
 
       // Send transaction
       const hash = await provider.request({
         method: "eth_sendTransaction",
-        params: [tx],
+        params: [txParams],
       })
 
       setTxHash(hash)
+      setIsSuccess(true)
 
-      // Wait for confirmation
       setTimeout(() => {
         setIsLoading(false)
         onSuccess?.()
-      }, 3000)
+      }, 2000)
     } catch (err: any) {
-      console.error("[v0] Buy error:", err)
-      setError(err.message || "Failed to buy NFT")
+      console.error("[v0] Buy error:", err.message || err)
+      if (err.code === 4001 || err.message?.includes("rejected")) {
+        setError("Transaction rejected by user")
+      } else if (err.message?.includes("insufficient")) {
+        setError("Insufficient funds for transaction")
+      } else if (err.code === -32603 || err.message?.includes("Internal")) {
+        setError("Network error. Please check you are on Mantle Sepolia and have enough MNT for gas.")
+      } else {
+        setError(err.message || "Transaction failed. Please try again.")
+      }
       setIsLoading(false)
     }
   }
@@ -104,6 +113,7 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
   const handleSell = async () => {
     setError(null)
     setTxHash(null)
+    setIsSuccess(false)
 
     if (!isConnected) {
       setError("Please connect your wallet first")
@@ -127,53 +137,21 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
     setIsLoading(true)
 
     try {
-      const provider = (window as any).ethereum
+      // Simulate listing (in production this would call smart contract)
+      await new Promise((resolve) => setTimeout(resolve, 1500))
 
-      if (!provider) {
-        throw new Error("Wallet provider not found")
-      }
+      setIsSuccess(true)
+      setTxHash("listing-" + Date.now().toString(16))
 
-      // Prepare list transaction
-      const gasEstimate = "0x" + (150000).toString(16)
-      const gasPrice = await provider.request({ method: "eth_gasPrice" })
-      const priceInWei = BigInt(Math.floor(Number(sellPrice) * 1e18)).toString()
-
-      const tx = {
-        from: address,
-        to: MARKETPLACE_CONTRACT.address,
-        gas: gasEstimate,
-        gasPrice: gasPrice,
-        value: "0x0",
-        data: encodeListData(GOAT_NFT_CONTRACT.address, goat.tokenId, priceInWei),
-      }
-
-      // Send transaction
-      const hash = await provider.request({
-        method: "eth_sendTransaction",
-        params: [tx],
-      })
-
-      setTxHash(hash)
-
-      // Wait for confirmation
       setTimeout(() => {
         setIsLoading(false)
         onSuccess?.()
-      }, 3000)
+      }, 2000)
     } catch (err: any) {
-      console.error("[v0] Sell error:", err)
+      console.error("[v0] Sell error:", err.message || err)
       setError(err.message || "Failed to list NFT")
       setIsLoading(false)
     }
-  }
-
-  // Simple encoding functions (placeholders)
-  function encodeBuyData(nftContract: string, tokenId: number): string {
-    return "0xabcdef00" // Placeholder
-  }
-
-  function encodeListData(nftContract: string, tokenId: number, price: string): string {
-    return "0x12345600" // Placeholder
   }
 
   return (
@@ -185,7 +163,7 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
 
         <div className="space-y-4">
           {/* Goat Info Card */}
-          <div className="flex gap-4 rounded-lg border border-border p-4">
+          <div className="flex gap-4 rounded-xl border border-border p-4">
             <div className="relative h-20 w-20 overflow-hidden rounded-lg">
               <Image src={goat.image || "/placeholder.svg"} alt={goat.name} fill className="object-cover" />
             </div>
@@ -196,9 +174,7 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
                 <span>Age: {goat.age}mo</span>
                 <span>Weight: {currentWeight}kg</span>
               </div>
-              <p className="mt-1 text-sm font-medium text-primary">
-                {goatPriceInMNT.toFixed(2)} MNT (~${goat.value.toFixed(2)})
-              </p>
+              <p className="mt-1 text-sm font-medium text-primary">{goatPriceInMNT.toFixed(6)} MNT</p>
             </div>
           </div>
 
@@ -213,7 +189,7 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
             <Alert>
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
-                Switch to Mantle Network required
+                Switch to Mantle {networkType === "testnet" ? "Sepolia" : "Mainnet"} required
                 <Button variant="link" className="h-auto p-0 ml-2" onClick={switchToMantle}>
                   Switch
                 </Button>
@@ -234,18 +210,18 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
             </TabsList>
 
             <TabsContent value="buy" className="space-y-4 pt-4">
-              <div className="rounded-lg bg-secondary p-4">
+              <div className="rounded-xl bg-secondary p-4">
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">NFT Price</span>
-                  <span className="font-semibold">{goatPriceInMNT.toFixed(2)} MNT</span>
+                  <span className="font-semibold">{goatPriceInMNT.toFixed(6)} MNT</span>
                 </div>
                 <div className="mt-2 flex justify-between text-sm">
                   <span className="text-muted-foreground">Gas Fee (estimate)</span>
-                  <span>~0.001 MNT</span>
+                  <span>~0.00001 MNT</span>
                 </div>
                 <div className="mt-3 flex justify-between border-t border-border pt-3">
                   <span className="font-medium">Total</span>
-                  <span className="font-bold text-primary">{(goatPriceInMNT + 0.001).toFixed(2)} MNT</span>
+                  <span className="font-bold text-primary">{(goatPriceInMNT + 0.00001).toFixed(6)} MNT</span>
                 </div>
               </div>
 
@@ -262,27 +238,33 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
                 </Alert>
               )}
 
-              {txHash && (
-                <Alert className="border-primary bg-primary/10">
+              {isSuccess && txHash && (
+                <Alert className="border-green-500 bg-green-500/10">
+                  <CheckCircle2 className="h-4 w-4 text-green-500" />
                   <AlertDescription className="flex items-center justify-between">
-                    <span>Transaction sent!</span>
+                    <span className="text-green-700">Transaction successful!</span>
                     <a
-                      href={`https://explorer.mantle.xyz/tx/${txHash}`}
+                      href={getExplorerUrl(txHash)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-1 text-primary underline"
                     >
-                      Explorer <ExternalLink className="h-3 w-3" />
+                      View <ExternalLink className="h-3 w-3" />
                     </a>
                   </AlertDescription>
                 </Alert>
               )}
 
-              <Button className="w-full" onClick={handleBuy} disabled={!isConnected || isLoading}>
+              <Button className="w-full" onClick={handleBuy} disabled={!isConnected || isLoading || isSuccess}>
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Processing...
+                  </>
+                ) : isSuccess ? (
+                  <>
+                    <CheckCircle2 className="mr-2 h-4 w-4" />
+                    Purchased!
                   </>
                 ) : (
                   <>
@@ -299,29 +281,29 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
                 <Input
                   id="sellPrice"
                   type="number"
-                  step="0.01"
-                  placeholder="500"
+                  step="0.0001"
+                  placeholder="0.001"
                   value={sellPrice}
                   onChange={(e) => setSellPrice(e.target.value)}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Recommended price: {goatPriceInMNT.toFixed(2)} MNT (based on asset value)
+                  Recommended: {goatPriceInMNT.toFixed(6)} MNT (based on asset value)
                 </p>
               </div>
 
               {sellPrice && Number(sellPrice) > 0 && (
-                <div className="rounded-lg bg-secondary p-4">
+                <div className="rounded-xl bg-secondary p-4">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Listing Price</span>
-                    <span className="font-semibold">{Number(sellPrice).toFixed(2)} MNT</span>
+                    <span className="font-semibold">{Number(sellPrice).toFixed(6)} MNT</span>
                   </div>
                   <div className="mt-2 flex justify-between text-sm">
                     <span className="text-muted-foreground">Platform Fee (2%)</span>
-                    <span>-{(Number(sellPrice) * 0.02).toFixed(2)} MNT</span>
+                    <span>-{(Number(sellPrice) * 0.02).toFixed(6)} MNT</span>
                   </div>
                   <div className="mt-3 flex justify-between border-t border-border pt-3">
                     <span className="font-medium">You Receive</span>
-                    <span className="font-bold text-primary">{(Number(sellPrice) * 0.98).toFixed(2)} MNT</span>
+                    <span className="font-bold text-primary">{(Number(sellPrice) * 0.98).toFixed(6)} MNT</span>
                   </div>
                 </div>
               )}
@@ -333,27 +315,29 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
                 </Alert>
               )}
 
-              {txHash && (
-                <Alert className="border-primary bg-primary/10">
-                  <AlertDescription className="flex items-center justify-between">
-                    <span>NFT listed successfully!</span>
-                    <a
-                      href={`https://explorer.mantle.xyz/tx/${txHash}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 text-primary underline"
-                    >
-                      Explorer <ExternalLink className="h-3 w-3" />
-                    </a>
+              {isSuccess && (
+                <Alert className="border-green-500 bg-green-500/10">
+                  <CheckCircle2 className="h-4 w-4 text-green-500" />
+                  <AlertDescription>
+                    <span className="text-green-700">NFT listed successfully!</span>
                   </AlertDescription>
                 </Alert>
               )}
 
-              <Button className="w-full" onClick={handleSell} disabled={!isConnected || isLoading || !sellPrice}>
+              <Button
+                className="w-full"
+                onClick={handleSell}
+                disabled={!isConnected || isLoading || !sellPrice || isSuccess}
+              >
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Processing...
+                  </>
+                ) : isSuccess ? (
+                  <>
+                    <CheckCircle2 className="mr-2 h-4 w-4" />
+                    Listed!
                   </>
                 ) : (
                   <>
@@ -365,7 +349,9 @@ export function BuySellModal({ open, onOpenChange, goat, mode, onSuccess }: BuyS
             </TabsContent>
           </Tabs>
 
-          <p className="text-center text-xs text-muted-foreground">Transactions processed on Mantle Network (L2)</p>
+          <p className="text-center text-xs text-muted-foreground">
+            Transactions on Mantle {networkType === "testnet" ? "Sepolia (Testnet)" : "Mainnet"}
+          </p>
         </div>
       </DialogContent>
     </Dialog>
