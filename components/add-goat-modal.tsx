@@ -230,14 +230,14 @@ export function AddGoatModal({ open, onOpenChange, onSuccess }: AddGoatModalProp
             <Input
               id="initialValue"
               type="number"
-              step="0.01"
-              placeholder="0.5"
+              step="0.0001"
+              placeholder="0.001"
               value={formData.initialValue}
               onChange={(e) => setFormData({ ...formData, initialValue: e.target.value })}
               required
             />
             <p className="text-xs text-muted-foreground">
-              This value will be recorded on blockchain as the initial asset price
+              This value will be recorded on blockchain as the initial asset price (recommended: 0.001 MNT for testnet)
             </p>
           </div>
 
