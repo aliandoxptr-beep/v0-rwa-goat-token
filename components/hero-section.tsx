@@ -17,8 +17,7 @@ export function HeroSection() {
           </h1>
 
           <p className="mx-auto mb-10 max-w-2xl text-pretty text-base text-muted-foreground sm:text-lg lg:text-xl leading-relaxed">
-            Tokenizing village-owned goats into transparent, yield-generating NFTs. A village enterprise initiative
-            bringing blockchain transparency to rural livestock management.
+            Tokenizing village-owned goats into transparent, yield-generating NFTs. A village enterprise initiative bringing blockchain transparency to rural livestock management.
           </p>
 
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
