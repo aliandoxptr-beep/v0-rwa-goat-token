@@ -4,9 +4,9 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
-import { WalletConnectModal } from "@/components/wallet-connect-modal"
+import { SolanaWalletModal } from "@/components/solana-wallet-modal"
 import { CartDrawer } from "@/components/cart-drawer"
-import { ChevronDown, LogOut, Copy, RefreshCw, ExternalLink, AlertTriangle, Menu, X } from "lucide-react"
+import { ChevronDown, LogOut, Copy, RefreshCw, ExternalLink, Menu, X } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,17 +14,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useWeb3 } from "@/contexts/web3-context"
-import { NetworkSwitcher } from "@/components/network-switcher"
+import { useSolanaWeb3 } from "@/contexts/solana-context"
+import { SolanaNetworkSwitcher } from "@/components/solana-network-switcher"
+import { getSolanaExplorerUrl } from "@/lib/solana-config"
 
 export function Header() {
-  const { isConnected, address, balance, walletName, isCorrectNetwork, disconnect, switchToMantle, getCurrentNetwork } =
-    useWeb3()
+  const { isConnected, publicKey, balance, walletName, disconnect, getCurrentNetwork } = useSolanaWeb3()
   const [showWalletModal, setShowWalletModal] = useState(false)
   const [copied, setCopied] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const currentNetwork = getCurrentNetwork()
+  const address = publicKey?.toBase58()
 
   const handleCopy = () => {
     if (address) {
@@ -64,14 +65,13 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <NetworkSwitcher />
+            <SolanaNetworkSwitcher />
             <CartDrawer />
             {isConnected ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm" className="flex items-center gap-2 bg-transparent">
-                    {!isCorrectNetwork && <AlertTriangle className="h-4 w-4 text-yellow-500" />}
-                    <div className={`h-2 w-2 rounded-full ${isCorrectNetwork ? "bg-green-500" : "bg-yellow-500"}`} />
+                    <div className="h-2 w-2 rounded-full bg-green-500" />
                     <span className="hidden text-sm font-medium sm:inline">
                       {address?.slice(0, 6)}...{address?.slice(-4)}
                     </span>
@@ -87,7 +87,7 @@ export function Header() {
                     </p>
                     {balance && (
                       <p className="text-sm font-semibold mt-2">
-                        {balance} {currentNetwork.nativeCurrency.symbol}
+                        {balance.toFixed(4)} SOL
                       </p>
                     )}
                   </div>
@@ -96,20 +96,11 @@ export function Header() {
                   <div className="px-3 py-2">
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-muted-foreground">Network</span>
-                      <span
-                        className={`text-xs font-medium ${isCorrectNetwork ? "text-green-600" : "text-yellow-600"}`}
-                      >
-                        {isCorrectNetwork ? currentNetwork.chainName : "Wrong Network"}
+                      <span className="text-xs font-medium text-green-600">
+                        {currentNetwork.name}
                       </span>
                     </div>
                   </div>
-
-                  {!isCorrectNetwork && (
-                    <DropdownMenuItem onClick={switchToMantle} className="text-yellow-600">
-                      <RefreshCw className="mr-2 h-4 w-4" />
-                      Switch to {currentNetwork.chainName}
-                    </DropdownMenuItem>
-                  )}
 
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleCopy}>
@@ -118,7 +109,7 @@ export function Header() {
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <a
-                      href={`${currentNetwork.blockExplorerUrls[0]}/address/${address}`}
+                      href={getSolanaExplorerUrl(currentNetwork.cluster, `address/${address}`)}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -183,7 +174,7 @@ export function Header() {
         )}
       </header>
 
-      <WalletConnectModal open={showWalletModal} onOpenChange={setShowWalletModal} />
+      <SolanaWalletModal open={showWalletModal} onOpenChange={setShowWalletModal} />
     </>
   )
 }

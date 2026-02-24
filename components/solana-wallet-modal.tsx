@@ -133,3 +133,6 @@ export function SolanaWalletConnectModal({ open, onOpenChange }: SolanaWalletCon
     </Dialog>
   )
 }
+
+// Alias for compatibility
+export const SolanaWalletModal = SolanaWalletConnectModal
