@@ -4,23 +4,23 @@ export function RWAExplanation() {
   const steps = [
     {
       icon: Database,
-      title: "Physical Goat",
-      description: "Real goats owned by village enterprise with proper documentation",
+      title: "Real Assets",
+      description: "Physical goats with complete documentation and RFID tags",
     },
     {
       icon: Cpu,
-      title: "RFID + Digital Scale",
-      description: "Each goat is tagged and weighed weekly using IoT devices",
+      title: "IoT Tracking",
+      description: "Weight, health, and growth data updated weekly from the farm",
     },
     {
       icon: LinkIcon,
-      title: "Blockchain (NFT)",
-      description: "Data is recorded on-chain as an ERC-721 NFT on Mantle L2",
+      title: "Blockchain NFT",
+      description: "Asset-backed ERC-721 NFT on Mantle L2 ensuring transparency",
     },
     {
       icon: BarChart3,
-      title: "Investor Dashboard",
-      description: "Track your asset in real-time with full transparency",
+      title: "Real Returns",
+      description: "Investors earn yield from farm productivity and asset appreciation",
     },
   ]
 
@@ -28,9 +28,9 @@ export function RWAExplanation() {
     <section id="how-it-works" className="border-b border-border bg-secondary/30 py-16 sm:py-24 lg:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
-          <h2 className="mb-4 text-2xl font-bold sm:text-3xl lg:text-4xl">How RWA Tokenization Works</h2>
+          <h2 className="mb-4 text-2xl font-bold sm:text-3xl lg:text-4xl">The Garosta Advantage</h2>
           <p className="mb-12 text-muted-foreground sm:text-lg leading-relaxed">
-            Each goat equals one NFT. The NFT is backed by real livestock, with data updated directly from the field.
+            One NFT per goat. Each token backed by a real asset with transparent, on-chain verification. Farmers grow their business. Investors earn steady returns.
           </p>
         </div>
 
@@ -56,16 +56,16 @@ export function RWAExplanation() {
         <div className="mx-auto mt-16 grid max-w-4xl gap-4 sm:grid-cols-3">
           {[
             {
-              title: "1 Goat = 1 NFT",
-              description: "Each physical goat is represented by a unique ERC-721 token",
+              title: "For Farmers",
+              description: "Capital without collateral. Retain ownership. Scale operations. Build long-term value.",
             },
             {
-              title: "Asset-Backed Value",
-              description: "NFT value directly tied to the real livestock market price",
+              title: "For Investors",
+              description: "Real assets. Transparent data. Sustainable yields. Diversified portfolio exposure.",
             },
             {
-              title: "Real-Time Updates",
-              description: "Weight and health data updated weekly from the farm",
+              title: "For Everyone",
+              description: "Blockchain ensures no middleman fees. Direct farmer-investor relationship.",
             },
           ].map((point, i) => (
             <div

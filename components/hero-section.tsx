@@ -9,35 +9,73 @@ export function HeroSection() {
         <div className="mx-auto max-w-3xl text-center">
           <div className="mb-8 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
             <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-            Web3 for Rural Inclusion
+            Connecting Farmers to Global Capital
           </div>
 
           <h1 className="mb-6 text-balance text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-            Garosta: <span className="text-primary">One Goat, One NFT</span>
+            <span className="text-primary">Garosta:</span> Digital Assets for Rural Prosperity
           </h1>
 
           <p className="mx-auto mb-10 max-w-2xl text-pretty text-base text-muted-foreground sm:text-lg lg:text-xl leading-relaxed">
-            Tokenizing village-owned goats into transparent, yield-generating NFTs. A village enterprise initiative bringing blockchain transparency to rural livestock management.
+            Garosta bridges the gap between small-scale farmers and global investors. Farmers access capital without collateral. Investors earn sustainable yields from real-world assets backed by transparent blockchain technology.
           </p>
 
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Button asChild size="lg" className="w-full gap-2 sm:w-auto">
               <Link href="/dashboard">
-                View Goat Dashboard
+                Explore Investments
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="w-full sm:w-auto bg-transparent">
-              <Link href="#how-it-works">Learn How It Works</Link>
+              <Link href="#how-it-works">How It Works</Link>
             </Button>
+          </div>
+        </div>
+
+        <div className="mx-auto mt-16 grid max-w-5xl gap-6 sm:mt-20 lg:grid-cols-2">
+          <div className="rounded-2xl border border-border bg-secondary/50 p-8">
+            <div className="mb-4 text-2xl font-bold text-primary">For Farmers</div>
+            <ul className="space-y-3 text-sm text-muted-foreground">
+              <li className="flex items-start gap-3">
+                <span className="mt-1 h-2 w-2 rounded-full bg-accent flex-shrink-0" />
+                <span>Immediate access to capital without selling livestock</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="mt-1 h-2 w-2 rounded-full bg-accent flex-shrink-0" />
+                <span>Retain ownership while generating revenue</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="mt-1 h-2 w-2 rounded-full bg-accent flex-shrink-0" />
+                <span>Grow your business with transparent, fair terms</span>
+              </li>
+            </ul>
+          </div>
+
+          <div className="rounded-2xl border border-border bg-secondary/50 p-8">
+            <div className="mb-4 text-2xl font-bold text-primary">For Investors</div>
+            <ul className="space-y-3 text-sm text-muted-foreground">
+              <li className="flex items-start gap-3">
+                <span className="mt-1 h-2 w-2 rounded-full bg-accent flex-shrink-0" />
+                <span>Diversify with real-world asset-backed investments</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="mt-1 h-2 w-2 rounded-full bg-accent flex-shrink-0" />
+                <span>Earn sustainable yields with transparent data</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="mt-1 h-2 w-2 rounded-full bg-accent flex-shrink-0" />
+                <span>Support rural communities and sustainable growth</span>
+              </li>
+            </ul>
           </div>
         </div>
 
         <div className="mx-auto mt-16 grid max-w-4xl grid-cols-2 gap-4 sm:mt-20 lg:grid-cols-4">
           {[
-            { label: "Total Goats", value: "6", icon: Globe },
-            { label: "Total Value", value: "2.72 MNT", icon: TrendingUp },
-            { label: "NFT Holders", value: "6", icon: Shield },
+            { label: "Active Goats", value: "6", icon: Globe },
+            { label: "Total Value", value: "$18.24", icon: TrendingUp },
+            { label: "Farmers", value: "2", icon: Shield },
             { label: "Avg Yield", value: "12%", icon: TrendingUp },
           ].map((stat, i) => (
             <div
