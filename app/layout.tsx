@@ -2,7 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
-import { Web3Provider } from "@/contexts/web3-context"
+import { SolanaWeb3Provider } from "@/contexts/solana-context"
 import { CartProvider } from "@/contexts/cart-context"
 import { GoatsProvider } from "@/contexts/goats-context"
 import "./globals.css"
@@ -11,9 +11,9 @@ const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Garosta | Real World Asset Tokenization",
+  title: "Garosta | Real World Asset Tokenization on Solana",
   description:
-    "Tokenizing village-owned goats into transparent, yield-generating NFTs. A village enterprise initiative for rural Web3 inclusion.",
+    "Tokenizing village-owned goats into transparent, yield-generating NFTs on Solana Chain. Connecting farmers to global investors with blockchain transparency.",
   generator: "v0.app",
   icons: {
     icon: [
@@ -42,11 +42,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans antialiased`}>
-        <Web3Provider>
+        <SolanaWeb3Provider>
           <GoatsProvider>
             <CartProvider>{children}</CartProvider>
           </GoatsProvider>
-        </Web3Provider>
+        </SolanaWeb3Provider>
         <Analytics />
       </body>
     </html>
