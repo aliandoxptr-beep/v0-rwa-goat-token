@@ -1,19 +1,19 @@
 "use client"
 
 import { useState } from "react"
-import { Header } from "@/components/header"
+import { SolanaHeader } from "@/components/solana-header"
 import { Footer } from "@/components/footer"
-import { GoatCard } from "@/components/goat-card"
+import { SolanaNFTCard } from "@/components/solana-nft-card"
 import { AddGoatModal } from "@/components/add-goat-modal"
 import { useGoats } from "@/contexts/goats-context"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Plus, Filter } from "lucide-react"
-import { useWeb3 } from "@/contexts/web3-context"
+import { useSolanaWeb3 } from "@/contexts/solana-context"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 export default function DashboardPage() {
-  const { isConnected, isCorrectNetwork } = useWeb3()
+  const { isConnected } = useSolanaWeb3()
   const { goats } = useGoats()
   const [showAddModal, setShowAddModal] = useState(false)
   const [filter, setFilter] = useState("all")
@@ -35,7 +35,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
+      <SolanaHeader />
       <main className="flex-1 mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
@@ -73,8 +73,8 @@ export default function DashboardPage() {
             </p>
           </div>
           <div className="rounded-2xl border border-border bg-card p-4 sm:p-5">
-            <p className="text-xs sm:text-sm text-muted-foreground">Total Value (MNT)</p>
-            <p className="text-xl sm:text-2xl font-bold mt-1">{totalValue.toFixed(4)} MNT</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">Total Value (SOL)</p>
+            <p className="text-xl sm:text-2xl font-bold mt-1">{(totalValue * 0.000001).toFixed(6)} SOL</p>
           </div>
           <div className="rounded-2xl border border-border bg-card p-4 sm:p-5">
             <p className="text-xs sm:text-sm text-muted-foreground">Avg Weight</p>
@@ -102,7 +102,7 @@ export default function DashboardPage() {
 
         <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filteredGoats.map((goat) => (
-            <GoatCard key={goat.nftId} goat={goat} />
+            <SolanaNFTCard key={goat.nftId} goat={goat} />
           ))}
         </div>
 
