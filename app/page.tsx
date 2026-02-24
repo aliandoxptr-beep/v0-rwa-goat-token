@@ -1,4 +1,4 @@
-import { Header } from "@/components/header"
+import { SolanaHeader } from "@/components/solana-header"
 import { HeroSection } from "@/components/hero-section"
 import { RWAExplanation } from "@/components/rwa-explanation"
 import { TrustSection } from "@/components/trust-section"
@@ -7,7 +7,7 @@ import { Footer } from "@/components/footer"
 export default function HomePage() {
   return (
     <div className="min-h-screen">
-      <Header />
+      <SolanaHeader />
       <main>
         <HeroSection />
         <RWAExplanation />

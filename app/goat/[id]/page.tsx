@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
-import { Header } from "@/components/header"
+import { SolanaHeader } from "@/components/solana-header"
 import { Footer } from "@/components/footer"
 import { goatsData } from "@/lib/mock-data"
 import { Badge } from "@/components/ui/badge"
@@ -29,7 +29,7 @@ export default async function GoatDetailPage({ params }: GoatDetailPageProps) {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
+      <SolanaHeader />
       <main className="flex-1 mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         <Button asChild variant="ghost" className="mb-6 -ml-2 gap-2">
           <Link href="/dashboard">

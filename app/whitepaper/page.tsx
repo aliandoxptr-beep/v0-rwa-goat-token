@@ -1,4 +1,4 @@
-import { Header } from "@/components/header"
+import { SolanaHeader } from "@/components/solana-header"
 import { Footer } from "@/components/footer"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
@@ -9,7 +9,7 @@ import Link from "next/link"
 export default function WhitepaperPage() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Header />
+      <SolanaHeader />
       <main className="flex-1">
         {/* Hero Section */}
         <section className="border-b border-border bg-card">

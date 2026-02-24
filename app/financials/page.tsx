@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Header } from "@/components/header"
+import { SolanaHeader } from "@/components/solana-header"
 import { Footer } from "@/components/footer"
 import { financialData, goatsData } from "@/lib/mock-data"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
@@ -26,7 +26,7 @@ export default function FinancialsPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
+      <SolanaHeader />
       <main className="flex-1 mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         <div className="mb-8">
           <Badge variant="outline" className="mb-3 text-xs">
